@@ -1,6 +1,6 @@
 # Unit
 
-## Welcome to CSE 167x
+### Welcome to CSE 167x
 
 > Welcome to Computer Graphics on EdX. I am Ravi Ramamoorthi, a
 > Professor of Computer Science and Engineering at UC San Diego. In this
@@ -19,13 +19,12 @@
 > about the magic of 3D computer graphics.
 
 
---
-
-# L1V1: ONLINE GRAPHICS OVERVIEW: MOTIVATION
+---
 
 #### Unit 0 > Lecture 1: Course Overview > L1V1: ONLINE GRAPHICS OVERVIEW: MOTIVATION
+# L1V1: ONLINE GRAPHICS OVERVIEW: MOTIVATION
 
-## L1V1: Online Graphics Overview: Motivation
+### L1V1: Online Graphics Overview: Motivation
 
 > Welcome to these online lectures for computer graphics. I am Ravi
 > Ramamoorthi, a professor at the University of California at San Diego.
@@ -176,13 +175,12 @@
 > course.
 
 
---
-
-# L1V2: ONLINE GRAPHICS OVERVIEW: COURSE OUTLINE AND LOGISTICS
+---
 
 #### Unit 0 > Lecture 1: Course Overview > L1V2: ONLINE GRAPHICS OVERVIEW: COURSE OUTLINE AND LOGISTICS
- 
-## L1V2: Online Graphics Overview: Course Outline and Logistics
+# L1V2: ONLINE GRAPHICS OVERVIEW: COURSE OUTLINE AND LOGISTICS
+
+### L1V2: Online Graphics Overview: Course Outline and Logistics
 
 > Welcome back. In this segment we're going to go over some of the
 > course logistics and give a brief overview of what the course is
@@ -281,13 +279,12 @@
 > phone for example. But you may need to set up your environment and
 > compilation framework correspondingly.
 
---
-
-# L1V3: ONLINE GRAPHICS OVERVIEW: HISTORY
+---
 
 #### Unit 0 > Lecture 1: Course Overview > L1V3: ONLINE GRAPHICS OVERVIEW: HISTORY
+# L1V3: ONLINE GRAPHICS OVERVIEW: HISTORY
 
-## L1V3: Online Graphics Overview: History
+### L1V3: Online Graphics Overview: History
 
 
 > In this segment we are going to give a brief history of computer
@@ -473,8 +470,9 @@
 > rendering. And really gives you a good synopsis of what 3D computer
 > graphics and this course is about.
 
+---
 
-## Recommended videos
+### Recommended videos
 
 #### History of Computer Graphics (1972) - SIGGRAPH for its 25th anniversary
 https://www.youtube.com/watch?v=NXkkr0REEPI
