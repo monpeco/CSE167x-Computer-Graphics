@@ -486,5 +486,575 @@ https://www.youtube.com/watch?v=6orsmFndx_o
 #### history of computer animation
 https://www.youtube.com/watch?v=LzZwiLUVaKg
 
---
+---
+
+
+
+#### Unit 0 > Lecture 2: Basic Math > L2V1: BASIC MATH: VECTORS AND DOT PRODUCTS
+# L2V1: BASIC MATH: VECTORS AND DOT PRODUCTS
+
+### L2V1: Basic Math: Vectors and Dot Products
+
+
+> Welcome to the second lecture of this online sequence. This is a
+> review of the basic math you need for computer graphics and in
+> particular, this first segment deals with vectors and dot products.
+> Let me first say a few words about the next steps for the course.
+> First, you should complete homework 0. And being able to compile
+> homework 0 will ensure you have your compilation set up, OpenGL.
+> Second, by actually submitting homework 0, you will ensure that you
+> are able to use our feedback and grading servers properly, you are
+> able to generate the images that they require. The first few lectures
+> in this course talk about some of the core mathematical and technical
+> ideas in computer graphics. They're some of the most beautiful ideas
+> in computer graphics. Homework 1 has only a few lines of code, so it's
+> relatively simple compared to homeworks 2 and 3. But I should mention
+> that you should still start early on homework 1, because it is the
+> first homework, and moreover, even though it only has a few lines of
+> code, there is quite some thinking to be done. The idea of homework 1
+> is to use some of the ideas in the first few lectures to generate your
+> first images. As far as textbooks for the course, there is none
+> required. This course is intended to be free and available to anyone.
+> If you are, however, interested in getting a reference, then a
+> reference for OpenGL and the GL shading language are useful. The
+> standard red book for OpenGL, and the orange book for the GL shading
+> language. But, I want to emphasize that there are no required
+> textbooks and there's nothing that you need to purchase for this
+> course. We start with the overall motivation of this section. Many
+> computer graphics concepts need basic mathematics like linear algebra.
+> We are interested in vectors, dot products, cross products. We are
+> interested in matrices, matrix-vector and matrix-matrix
+> multiplication. How does this come up? Assume for example that you
+> have a point that you want to translate to a different region. This
+> comes up all the time, you have a character, you want to move it
+> somewhere else in the scene. You can regard the point as a vector and
+> we'll see how an operation like translation, rotation can be written
+> as a matrix-vector mulitiplication. The contents of this lecture on
+> vectors and matrices should be very basic for most of you. It does not
+> go beyond what you would learn in a basic high school mathematical
+> education. We'll start by talking about vectors. Vectors are usually
+> written with the vector symbol, so this is the common vector symbol,
+> an arrow on top. Or, if you look at the textbook, they are often
+> written in bold. The magnitude is written in the standard way by
+> putting a norm symbol around the vector. Vectors have a length and
+> they have a direction. The absolute position of a vector is not
+> important. And so these 2 vectors are actually the same. So this
+> vector moves here and I just translated the vector here, but they are
+> actually the same vector. Vectors are used to store offsets,
+> displacements and locations. But strictly speaking, there is a minor
+> technical difference, that a position is not strictly speaking a
+> vector and in fact you cannot add positions as vectors, because to
+> have a positions such as 2 units on the X axis, we implicitly require
+> an origin. Whereas, a vector is supposed to be independent of the
+> origin, can be translated with respect to itself. Nevertheless, it is
+> very convenient to also represent positions as vectors, and to
+> multiply them as matrices to do various transformations. The first
+> vector operation we are going to consider is vector addition. And so
+> you have 2 vectors a and b, and you want to find what is the vector, a
+> + b. This can be done geometrically with what is known as, the parallelogram rule. So, here you have the vector a. I take the vector
+> b and I translate it, so that the tail of vector b is aligned with the
+> head of vector a. And I complete the parallelogram and the diagonal of
+> the parallelogram is the addition. If you don't want to think in terms
+> of parallelograms, just think about it in terms of a triangle. So, I
+> am considering the vector a + b from the tail of a to the head of b.
+> Vector addition is commutative, so a + b is equal to b + a and if you
+> are not very much into parallelograms, then we can consider it as
+> simply adding coordinates in Cartesian components. So let's consider
+> Cartesian coordinates, your familiar X and Y coordinates. I've shown
+> the X axis and the Y axis. The vector I've shown here can be moved to
+> the origin of the Cartesian coordinate system. And you can see in this
+> case, it has 4 units along the X axis and 3 units along the Y axis. So
+> the vector can be written as 4 times the unit X vector plus 3 times
+> unit Y vector. X and Y, in this case are the coordinates of the axis.
+> But, in general they can be any orthogonal unit vector. So, I write
+> the vector A as the components X and Y. It's also interesting,
+> sometimes, to write the transpose of A. So I'm writing a vector as a
+> column vector. It transposes a row vector, x and y. And the norm of A
+> is going to be square root of x^2 + y^2. Which, in this case, is the
+> square root of 4^2 + 3^2 which will be equal to 5. That's just the
+> Pythagorean relationship. It's important to note that x and y can be
+> any unit vectors. Vectors can also be multiplied and in fact there are
+> 2 multiplications of vector, the dot or the scalar product and the
+> cross or the vector product. Note that in this lecture we will use
+> right-handed coordinates, which is a standard coordinate system found
+> in most mathematics textbooks. What do right-handed coordinates mean?
+> If you take your right hand and your X axis is pointed here, your Y
+> axis is pointed here. If you take your hand and you curl them around
+> the X and Y axes, the thumb on the right hand will point towards the
+> positive Z axis. With left-handed coordinates it would of course be
+> the opposite and so we assume right-handed coordinate system with
+> obvious due apologies to those of you who are left-handed. First,
+> let's consider the dot or the scalar product and that is written as a
+> dot b. It's commutative. It's also equal to b dot a. We want to
+> consider the norm of a, so of course the product involves the product
+> of the two vectors a and b, so we do want to consider this norm of a.
+> And now of course it is symmetric, so we will also want to consider
+> the norm of vector b. How does it depend on the angle between a and b?
+> That's the crucial question. And its intended to be the product of
+> their magnitudes when the vectors are aligned. But, when they are not
+> aligned, we will have to multiply it, by the cosine of the angle
+> between them. My handwriting is not the best and throughout this
+> course when you need an actual equation, I will put it on the slide as
+> well. As we see here, a dot b is the norm of a times norm of b times
+> the cosine of the angle between them. From that equation, you can
+> calculate the angle between two vectors, as the inverse cosine of a
+> dot b divided by each of their individual magnitudes. This is in fact
+> is one of the most common uses of the dot product, because the dot
+> product can be calculated very efficiently in Cartesian components,
+> but the angle between two vectors not that easily. So, what you do is,
+> you take the dot product, and then by taking the inverse cosine, you
+> get the angle between the 2 vectors. The dot or scalar products has
+> the associativity and the multiplication properties. So a dot (b + c)
+> is equal to a dot b + a dot c. And if you multiply a scalar through
+> any of the vectors k dot b or uh, a dot kb that just multiplies the
+> dot product by a scalar. The question now is, what is the dot product
+> in Cartesian components? And this is something we can derive. So I
+> write the dot product as x_a. And now, this is in a particular
+> direction. So it's in the direction of the X vector. And the next
+> coordinate is y_a, which is in the direction of the Y vector. Okay, so
+> I am going to take dot product of this with the same thing for b and b
+> will be written as x_b times the X vector plus y_b times the Y vector.
+> If we now consider and expand these things out, we have the following.
+> So we have x_a
+> * X times x_b * X and I can write that. I can also include the y_a * y_b term and that will multiply Y dot Y. Finally, I can include the X
+> dot Y terms. X dot Y terms and so I can write plus X dot Y. And that
+> will be multiplied by x_a * y_b + x_b * y_a. But what you can
+> immediately realize is that, because the cosine of the angle between X
+> and Y is 0, the angles X and Y are away by 90 degrees. Cosine of 90
+> degrees is 0. So this quantity is actually equal to 0. And therefore,
+> we only care about this term here. And, of course, if you could not
+> quite follow my handwriting, I, again, have the equation on the next
+> slide. Where a dot b is equal to the dot product of [x_a, y_a] and
+> [x_b, y_b]. And this is simply equal to x_a * x_b plus y_a * y_b. Very
+> Simple. Let's look at some applications in computer graphics. The
+> obvious one is to find the angle between two vectors, I already talked
+> about it. The cosine of the angle between the light source and the
+> surface is very important for shading. It's also important to find the
+> projection of one vector on another. Example, if we want a
+> co-ordinates of a point in new co-ordinate system. And the advantage
+> of the dot product is that it is easily computed in Cartesian
+> coordinates. So let's now as a final step look at the projection of
+> vector b on a. So very often you want to know what fraction of the
+> vector b lies on a. And this can be done easily with the dot product.
+> Essentially it's equal to the norm of the vector b, times the cosine.
+> So we can say that the projection of the vector b on a is equal to the
+> norm of the vector b times the cosine of the angle between them.
+> Because that's the definition, the component of b along vector a is
+> given by the cosine. And this is simply a dot product of the vector a
+> and the vector b, which is what the cosine is, divided by the norm of
+> a and the norm of b. Now the norm of b cancels and what you are left
+> with is the dot product of a and b divided by the magnitude of the
+> vector a. And so the question is what is the component of b along a
+> given by? We will have to multiply by the unit vector along the a
+> direction. We already have the length in the first formula but now you
+> need to multiply by this term. So this term here is the unit vector.
+> So it is the unit vector which has a length of 1. And you multiply by
+> that. Now, b projection on a is a dot b / norm of a, multiplying by
+> the vector a, and dividing by norm of a, makes norm of a squared. And
+> so what you are left with, is the projection of b on the vector a, is
+> this quantity, which involves the dot product between a and b. And the
+> projection is of course, along the direction of the vector a, which is
+> why the final result involves the vector a.
+
+
+### Key concepts
+
+*  Dot (scalar) product 
+
+*  Dot product: some applications in CG
+  1. Find angle between two vectors (e.g. cosine of angle between light source and surface for shading)
+  2. Finding projection of one vector on another (e.g. coordinates of point in arbitrary coordinate system)
+  3. Advantage: computed easily in cartesian components
+
+### Reference
+
+*  The standard red book for OpenGL
+*  The orange book for the GL shading language
+
+---
+
+
+
+#### Unit 0 > Lecture 2: Basic Math > L2V2: BASIC MATH: CROSS PRODUCTS
+# L2V2: BASIC MATH: CROSS PRODUCTS
+
+### L2V2: Basic Math: Cross Products
+
+
+> Welcome to the second lecture of this online sequence. This is a
+> review of the basic math you need for computer graphics and in
+> particular, this first segment deals with vectors and dot products.
+> Let me first say a few words about the next steps for the course.
+> First, you should complete homework 0. And being able to compile
+> homework 0 will ensure you have your compilation set up, OpenGL.
+> Second, by actually submitting homework 0, you will ensure that you
+> are able to use our feedback and grading servers properly, you are
+> able to generate the images that they require. The first few lectures
+> in this course talk about some of the core mathematical and technical
+> ideas in computer graphics. They're some of the most beautiful ideas
+> in computer graphics. Homework 1 has only a few lines of code, so it's
+> relatively simple compared to homeworks 2 and 3. But I should mention
+> that you should still start early on homework 1, because it is the
+> first homework, and moreover, even though it only has a few lines of
+> code, there is quite some thinking to be done. The idea of homework 1
+> is to use some of the ideas in the first few lectures to generate your
+> first images. As far as textbooks for the course, there is none
+> required. This course is intended to be free and available to anyone.
+> If you are, however, interested in getting a reference, then a
+> reference for OpenGL and the GL shading language are useful. The
+> standard red book for OpenGL, and the orange book for the GL shading
+> language. But, I want to emphasize that there are no required
+> textbooks and there's nothing that you need to purchase for this
+> course. We start with the overall motivation of this section. Many
+> computer graphics concepts need basic mathematics like linear algebra.
+> We are interested in vectors, dot products, cross products. We are
+> interested in matrices, matrix-vector and matrix-matrix
+> multiplication. How does this come up? Assume for example that you
+> have a point that you want to translate to a different region. This
+> comes up all the time, you have a character, you want to move it
+> somewhere else in the scene. You can regard the point as a vector and
+> we'll see how an operation like translation, rotation can be written
+> as a matrix-vector mulitiplication. The contents of this lecture on
+> vectors and matrices should be very basic for most of you. It does not
+> go beyond what you would learn in a basic high school mathematical
+> education. We'll start by talking about vectors. Vectors are usually
+> written with the vector symbol, so this is the common vector symbol,
+> an arrow on top. Or, if you look at the textbook, they are often
+> written in bold. The magnitude is written in the standard way by
+> putting a norm symbol around the vector. Vectors have a length and
+> they have a direction. The absolute position of a vector is not
+> important. And so these 2 vectors are actually the same. So this
+> vector moves here and I just translated the vector here, but they are
+> actually the same vector. Vectors are used to store offsets,
+> displacements and locations. But strictly speaking, there is a minor
+> technical difference, that a position is not strictly speaking a
+> vector and in fact you cannot add positions as vectors, because to
+> have a positions such as 2 units on the X axis, we implicitly require
+> an origin. Whereas, a vector is supposed to be independent of the
+> origin, can be translated with respect to itself. Nevertheless, it is
+> very convenient to also represent positions as vectors, and to
+> multiply them as matrices to do various transformations. The first
+> vector operation we are going to consider is vector addition. And so
+> you have 2 vectors a and b, and you want to find what is the vector, a
+> + b. This can be done geometrically with what is known as, the parallelogram rule. So, here you have the vector a. I take the vector
+> b and I translate it, so that the tail of vector b is aligned with the
+> head of vector a. And I complete the parallelogram and the diagonal of
+> the parallelogram is the addition. If you don't want to think in terms
+> of parallelograms, just think about it in terms of a triangle. So, I
+> am considering the vector a + b from the tail of a to the head of b.
+> Vector addition is commutative, so a + b is equal to b + a and if you
+> are not very much into parallelograms, then we can consider it as
+> simply adding coordinates in Cartesian components. So let's consider
+> Cartesian coordinates, your familiar X and Y coordinates. I've shown
+> the X axis and the Y axis. The vector I've shown here can be moved to
+> the origin of the Cartesian coordinate system. And you can see in this
+> case, it has 4 units along the X axis and 3 units along the Y axis. So
+> the vector can be written as 4 times the unit X vector plus 3 times
+> unit Y vector. X and Y, in this case are the coordinates of the axis.
+> But, in general they can be any orthogonal unit vector. So, I write
+> the vector A as the components X and Y. It's also interesting,
+> sometimes, to write the transpose of A. So I'm writing a vector as a
+> column vector. It transposes a row vector, x and y. And the norm of A
+> is going to be square root of x^2 + y^2. Which, in this case, is the
+> square root of 4^2 + 3^2 which will be equal to 5. That's just the
+> Pythagorean relationship. It's important to note that x and y can be
+> any unit vectors. Vectors can also be multiplied and in fact there are
+> 2 multiplications of vector, the dot or the scalar product and the
+> cross or the vector product. Note that in this lecture we will use
+> right-handed coordinates, which is a standard coordinate system found
+> in most mathematics textbooks. What do right-handed coordinates mean?
+> If you take your right hand and your X axis is pointed here, your Y
+> axis is pointed here. If you take your hand and you curl them around
+> the X and Y axes, the thumb on the right hand will point towards the
+> positive Z axis. With left-handed coordinates it would of course be
+> the opposite and so we assume right-handed coordinate system with
+> obvious due apologies to those of you who are left-handed. First,
+> let's consider the dot or the scalar product and that is written as a
+> dot b. It's commutative. It's also equal to b dot a. We want to
+> consider the norm of a, so of course the product involves the product
+> of the two vectors a and b, so we do want to consider this norm of a.
+> And now of course it is symmetric, so we will also want to consider
+> the norm of vector b. How does it depend on the angle between a and b?
+> That's the crucial question. And its intended to be the product of
+> their magnitudes when the vectors are aligned. But, when they are not
+> aligned, we will have to multiply it, by the cosine of the angle
+> between them. My handwriting is not the best and throughout this
+> course when you need an actual equation, I will put it on the slide as
+> well. As we see here, a dot b is the norm of a times norm of b times
+> the cosine of the angle between them. From that equation, you can
+> calculate the angle between two vectors, as the inverse cosine of a
+> dot b divided by each of their individual magnitudes. This is in fact
+> is one of the most common uses of the dot product, because the dot
+> product can be calculated very efficiently in Cartesian components,
+> but the angle between two vectors not that easily. So, what you do is,
+> you take the dot product, and then by taking the inverse cosine, you
+> get the angle between the 2 vectors. The dot or scalar products has
+> the associativity and the multiplication properties. So a dot (b + c)
+> is equal to a dot b + a dot c. And if you multiply a scalar through
+> any of the vectors k dot b or uh, a dot kb that just multiplies the
+> dot product by a scalar. The question now is, what is the dot product
+> in Cartesian components? And this is something we can derive. So I
+> write the dot product as x_a. And now, this is in a particular
+> direction. So it's in the direction of the X vector. And the next
+> coordinate is y_a, which is in the direction of the Y vector. Okay, so
+> I am going to take dot product of this with the same thing for b and b
+> will be written as x_b times the X vector plus y_b times the Y vector.
+> If we now consider and expand these things out, we have the following.
+> So we have x_a
+> * X times x_b * X and I can write that. I can also include the y_a * y_b term and that will multiply Y dot Y. Finally, I can include the X
+> dot Y terms. X dot Y terms and so I can write plus X dot Y. And that
+> will be multiplied by x_a * y_b + x_b * y_a. But what you can
+> immediately realize is that, because the cosine of the angle between X
+> and Y is 0, the angles X and Y are away by 90 degrees. Cosine of 90
+> degrees is 0. So this quantity is actually equal to 0. And therefore,
+> we only care about this term here. And, of course, if you could not
+> quite follow my handwriting, I, again, have the equation on the next
+> slide. Where a dot b is equal to the dot product of [x_a, y_a] and
+> [x_b, y_b]. And this is simply equal to x_a * x_b plus y_a * y_b. Very
+> Simple. Let's look at some applications in computer graphics. The
+> obvious one is to find the angle between two vectors, I already talked
+> about it. The cosine of the angle between the light source and the
+> surface is very important for shading. It's also important to find the
+> projection of one vector on another. Example, if we want a
+> co-ordinates of a point in new co-ordinate system. And the advantage
+> of the dot product is that it is easily computed in Cartesian
+> coordinates. So let's now as a final step look at the projection of
+> vector b on a. So very often you want to know what fraction of the
+> vector b lies on a. And this can be done easily with the dot product.
+> Essentially it's equal to the norm of the vector b, times the cosine.
+> So we can say that the projection of the vector b on a is equal to the
+> norm of the vector b times the cosine of the angle between them.
+> Because that's the definition, the component of b along vector a is
+> given by the cosine. And this is simply a dot product of the vector a
+> and the vector b, which is what the cosine is, divided by the norm of
+> a and the norm of b. Now the norm of b cancels and what you are left
+> with is the dot product of a and b divided by the magnitude of the
+> vector a. And so the question is what is the component of b along a
+> given by? We will have to multiply by the unit vector along the a
+> direction. We already have the length in the first formula but now you
+> need to multiply by this term. So this term here is the unit vector.
+> So it is the unit vector which has a length of 1. And you multiply by
+> that. Now, b projection on a is a dot b / norm of a, multiplying by
+> the vector a, and dividing by norm of a, makes norm of a squared. And
+> so what you are left with, is the projection of b on the vector a, is
+> this quantity, which involves the dot product between a and b. And the
+> projection is of course, along the direction of the vector a, which is
+> why the final result involves the vector a.
+
+### Key concepts
+
+*  Cross (vector) product
+*  Cross product: Cartesian formula?
+*  Dual matrix of vector a 
+
+
+---
+
+
+
+#### Unit 0 > Lecture 2: Basic Math > L2V3: BASIC MATH: CREATING A COORDINATE FRAME
+# L2V3: BASIC MATH: CREATING A COORDINATE FRAME
+
+### L2V3: Basic Math: Creating a Coordinate Frame
+
+
+> Welcome. In this segment, we are going to see how to use dot and cross
+> products to create an orthonormal coordinate frame which will be
+> useful in many applications. Orthonormal bases and coordinate frames
+> are important for representing points, positions, locations. Often
+> there are many different sets of coordinate systems. So not just your
+> single XYZ coordinate systems. In graphics this is very common that
+> you will have a coordinate system associated with the model, you will
+> have a coordinate system associated with the local coordinates, you
+> will have a coordinate system associated with the world, you may even
+> have separate coordinate systems for the head, for the shoulder, for
+> the hands, for the torso, for the legs, for the shoes, so on. And a
+> very important part is to get all of these different objects in their
+> consistent frame of reference. So a critical issue is transforming
+> between these different coordinate systems. In fact the next 3
+> lectures deal with the transformations and viewing and the way in
+> which you can use matrices and vectors for that purpose. So what is a
+> coordinate frame? It's any set of 3 vectors in 3 dimensions, such that
+> the vectors are of unit norm. Such that the vectors are mutually
+> orthogonal to each other. And such that they obey this cross product
+> relationship, which is that w is equal to u cross v. You can think of
+> all of these in terms of X, Y and Z. Of course, the unit X, Y and Z
+> vectors are of unit norm. Of course they're mutually orhtogonal with
+> respect to each other. And, of course, the Z vector is simply equal to
+> X cross Y. One of the interesting things about this is that a vector p
+> can be written in terms of its projections onto the vectors u, v and
+> w. So, p dot u is the projection onto the vector u, with the vector u.
+> p dot v is the projection onto the vector v, times the vector v. p dot
+> w is the projection onto the vector w, times the vector w. How do you
+> construct the coordinate frame? So, the first question, why do you
+> want to construct the coordinate frame? It's often the case that
+> you're given a vector a, which in homework 1, will be the viewing
+> direction. You want to create an orthonormal basis from this. But of
+> course, an orthonormal basis involves 3 unit vectors and you can't get
+> it from a single vector, so need a second vector b, which in homework
+> 1 is the up direction of the camera. So given 2 vectors a and b, how
+> to you create an orthonormal coordinate frame? Intuitively, you want
+> to associate the vector w with a and the vector v with b. But, a and b
+> are neither orthogonal vectors nor are they a unit norm, and we also
+> need to find the u vector. First let's try to find what the vector w
+> is equal to. And the vector w should just be given by the vector a in
+> this case. But the only problem with this is that A is not of unit
+> norm, so we need to normalize it. And we simply divide by the
+> magnitude of the vector a. So that part is simple, the vector w is
+> equal to the a divided by the unit norm of a. But how do we get v and
+> u? That part is complicated, so why is is complicated? If the vector b
+> is orthogonal to the vector a you're completely fine, you can just
+> define b based on that. The vector b may not be orthogonal to the
+> vector a. So one thing to do is to remove its projection in the
+> direction of a which would be a dot product but there is in fact a
+> more elegant way of doing this. Even though b and now w are not
+> necessarily orthogonal to each other we can use the cross product to
+> find the third vector which is orthogonal to both b and w. So instead
+> of finding the vector v, we first find the vector u. You write the
+> vector u as equal to b cross product with w and divide the whole thing
+> by the norm of b cross w. And that's the formula I have written here,
+> u is equal to b cross w divided by the norm of b cross w. The final
+> step we need here, is to find the vector v, but given w and u, v is
+> given by, w cross product with u. In this way you have created a
+> complete coordinate frame, given 2 vectors, that need not be unit
+> norm, that need not be orthogonal. Of-course this fails when the norm,
+> when this quantity is equal to zero, so if b and w are aligned with
+> each other, in which case their cross product is equal to zero, then
+> they are really the same vector, a and b are the same vector and you
+> cannot create the coordinate frame.
+
+
+---
+
+
+
+#### Unit 0 > Lecture 2: Basic Math > L2V4: BASIC MATH: MATRICES
+
+# L2V4: BASIC MATH: MATRICES
+
+
+### L2V4: Basic Math: Matrices
+
+
+> In the previous segments, we have studied various aspects of vectors.
+> In this segment, we will talk about matrices, which are also very
+> important. Most transformations involve a matrix multiplying a vector.
+> Matrices can be used to transform points. The next few lectures will
+> talk about their use for translation, rotation, shears, scales. In
+> fact, all transformations and the graphics pipeline are handled by
+> matrices. First question, what is a matrix. Its just an array of
+> numbers. It has m rows, in this case 3 rows, and n columns, in this
+> case 2 columns. Operations you can do on a matrix. Addition and
+> multiplication by a scalar are simple. They're just applied to each
+> element of the matrix. So if you add one matrix to another matrix you
+> just do element by element addition. If you want to multiply a matrix
+> by scalar you just scale up all the elements by a constant, by the
+> scalar. The most interesting thing is matrix-vector and matrix-matrix
+> multiplication. Note that a vector is a special case of a matrix. In
+> our case, we have been using column vectors, so they have n rows and 1
+> column. For matrix-matrix multiplication, the rules are that the
+> number of columns in the first matrix, in this case the first matrix
+> has 2 columns, must equal to number of rows, in this case 2 rows, in
+> the second matrix. So if you multiply matrix m by n times another
+> matrix n by k, the result will be m times k. Another way of thinking
+> about this is that the element (i,j) in the product is a dot product
+> of row i in the first matrix, and column j of the second matrix. So
+> the condition that the number of columns in the first is equal to the
+> number of rows in the second is simply a condition that we must be
+> able to take dot products, the vectors must be of the same length. So
+> here, I've shown how the matrix multiplication works. The highlight is
+> on the first row of the first matrix and the result. Note that in
+> element (i,j), so this is the element in the top left, and starting to
+> number my rows and columns from 1, I can say that this is element
+> (1,1). So it will be a dot product of row 1 and so I can number these
+> rows as 1, 2, 3, and I can similarly number the columns as 1, 2, 3, 4.
+> So it will be a dot product of row 1 and column 1 in order to
+> highlight the different columns here I have used the color red. Ans so
+> 1 times 3 is 3, 3 times 2 is 6, you add these together in the dot
+> product. It's 9, and that's the value. Notice the color of
+> highlighting so, red is used to highlight the first column here, first
+> column here and so you get the dot product of [1, 3] and [3, 2] for
+> this number. Similarly, for this number here its dot product of [1, 3]
+> and [6, 7] so, 1 times 6 is 6, 3 times 7 is 21, you get 27. Now the
+> next one, 1 times 9 is 9, 3 times 8 is 24, you get 33. 1 times 4 is 3
+> times 3 is 9, you get 13. And similarly, we can apply this to the next
+> row. And so we take the dot product with each column to give each
+> element of this matrix. For example, for the first one, 5 times 3 is
+> 15, 2 times 2 is 4, 19. 5 times 6 is 30, 2 times 7 is 14, 44. 5 times
+> 9 is 45, 2 times 8 is 16, 61. 5 times 4 is 20, 2 times 3 is 6, 26. And
+> the final example here, the first one is 0, so we don't even need to
+> consider it. 4 times 2 is 8, 4 times 7 is 28, 4 times 8 is 32, 4 times
+> 3 is 12. And this is the way matrix multiplication works. Matrix
+> multiplication is not commutative. If I reverse the order of the
+> matrices here, it's not even a legal operation. The number of columns
+> in the first matrix, in this case, is 4. The number of rows in the
+> second, in this case, is 3, and it's not commutative. Even if the
+> matrices actually have dimensions that they can be multiplied, it's
+> still not commutative. However, matrix multiplication is associative
+> and distributive. So a * (b+c) is equal to ab + ac. (a + b) * c is
+> equal to ac + bc. Matrix-vector multiplication is key for transforming
+> the points and this is the main topic we will be treating in the next
+> few lectures. We can treat the vector as a column matrix, m rows times
+> 1 column. And just as a simple example, I've shown you 2D reflection
+> about the Y axis, so let's talk about reflection for a minute. So I
+> have my screen, this is the X axis, this is the Y axis, and I have a
+> point here, which has some coordinates (x,y). I wish to reflect it
+> about the Y axis to get a point here. And this will have coordinates,
+> (-x,y). That's what reflection about the y axis is. If you think about
+> this matrix equation, the new x coordinate is -1 times x plus 0 times
+> y, which is -x, and 0 times x plus 1 times y, which is y. So
+> reflection is given by this equation, [-1 0, 0 1], whereas the
+> identity would just have this as plus 1. So this is a simple example
+> of how matrix vector multiplication can be used to transform points
+> corresponding to a particular operation. The other interesting thing
+> we consider is the transpose of a matrix. And that simply replaces the
+> rows with columns, so you can think of [1 2] being the first row
+> becomes the first column, [3 4] second column, [5 6] third column. We
+> can also transpose a vector in which the column vector becomes a row
+> vector and vice versa. One interesting property on the matrix
+> transpose, it also applies to matrix inverses, is that, if you want to
+> transpose the product of 2 matrices, A and B, A times B transpose, you
+> just transpose the individual matrices, so you transpose B and you
+> transpose A, but you have to flip the order. So you have to reverse
+> the order in which the transposes are applied. So it will be B
+> transpose times A transpose. That's a very useful property to know.
+> The identity matrix is useful to define, and so the dimensions of the
+> matrix have noted here 3 by 3. It just has ones along its main
+> diagonal, zeroes elsewhere. And the properties of the identity matrix
+> is the matrix times its inverse is equal to inverse times matrix, is
+> the identity. How do you, do the inverse of A times B, it's A inverse
+> B inverse, but you have to change the order. So if I consider, B
+> inverse times A inverse, times A, times B. You can see that this
+> becomes the identity, and then B inverse times B, also becomes the
+> identity. So changing the order is in fact, the right thing to do. If
+> I don't change the order, the result is not the identity. Finally
+> let's relate matrices back to the dot product and the cross product.
+> And we want these vector multiplication operations, a dot b and a
+> cross b to be represented in terms of matrix-vector multiplication. So
+> a dot b just multiplies the same components of vector a with vector b,
+> and there is a very easy way to represent this in matrices, as a
+> transpose b (a^T * b). So, if the vector is a column vector, the
+> transpose is x_a, y_a, z_a. The number of columns 3 is equal to the
+> number of rows, and the dimensions of the matrix is the number of
+> rows, here 1 and the number of columns, here 1. And so you have x_a *
+> x_b + y_a * y_b + z_a * z_b. Next, we come to the cross product. We've
+> already seen it when we discussed cross products. You can do it using
+> the dual matrix of the vector a, and so you can represent it as "A
+> star" (A*) times b, where A* is the dual matrix of the vector a.
+
+
+
+### Key concepts
+
+*  Matrices
+*  Matrix-matrix multiplication
+*  Matrix-Vector Multiplication
+*  Transpose of a Matrix (or vector?)
+*  Identity Matrix and Inverses
+*  Vector multiplication in Matrix form
+
+
+---
+
+
 
