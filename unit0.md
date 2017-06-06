@@ -1109,3 +1109,34 @@ Next, I want you to change the color of the red highlight on the teapot to yello
 #### Future Homework Frameworks
 
 It is a good idea to visit the course syllabus and attempt to compile the later homework frameworks, so that we can catch any compilation issues early.
+
+---
+
+#### Unit 0 > Homework 0 > HOMEWORK 0: FAQ/COMPILATION NOTES
+
+# HOMEWORK 0: FAQ/COMPILATION NOTES
+
+### Homework 0: FAQ/Compilation Notes
+
+The skeleton code already includes most needed dependencies, and will compile without problems in the vast majority of cases. So, most of you will not need to read this FAQ at all.   Also, as a first step, if you are having difficulties, please update the drivers for your graphics card.  (It's amazing how many issues were fixed by this simple operation in previous EdX classes).  As a general guideline, we do require support of OpenGL 2.1 and GLSL 120.  While almost any machine purchased in the last 5-6 years will support this, some integrated Intel graphics cards might not.  The only way to really test is to make sure homework 0 works.  In particular, if you get a message (on Windows) like exception at 0x00000000 in hw0-windows.exe: 0xC0000005: Access violation it may indicate an issue with your graphics card, and you need to upgrade drivers and/or try a different card/machine.
+
+Please note that different computer systems produce slightly different images. We have set our thresholds in the autograder accordingly. Don't worry about a few pixels being off, as long as you pass the test.  Please also note that the autograder includes a visual watermark on the solution images, which will make them look slightly different from your own images, but will not affect the grading.  
+
+Similarly, please ignore compiler warnings, as long as the program compiles and runs.  In particular, to allow for execution on the widest variety of older systems, we do use many backwards-compatible deprecated programming constructs, which may lead to a number of warnings on newer machines.  The programs will still compile and run, and if they do so, you may safely ignore these warnings.
+
+If you still have difficulties passing the test and know your images are correct, please (1) Check the images are not zoomed (scaled) or resized in any way.  Also, please do not zoom into/maximize/etc the image before you press 'o' to take the final screenshots. (2) Turn off all antialiasing features for your graphics card; you may also need to set 3D anti-aliasing to Application Managed.  For Intel graphics cards, open the Intel HD Graphics Panel, go to 3D, set "Application Optimal Mode" to off.
+
+Windows
+
+Visual Studio Community 2017 edition (free for students, open source developers and individual developers) should be available for free at http://www.microsoft.com/visualstudio/eng/downloads which also may have links to older downloads (we support Visual Studio 2012 and later).  Please note that with VS 2015 and later, you must explicitly select C++ support when installing; by default only C# etc. is installed.  Failing to include C++ support will lead to lots of issues with missing headers etc.  If this does not work for you for whatever reason, we assume you can obtain Visual Studio or an equivalent C++ development environment by other means.  In the past, we've found another useful link as https://www.dreamspark.com/ where one can download Visual studio (2012, 2013, 2015+); however, that link may require being enrolled as a student in a regular academic program and providing academic verification.
+
+Choose the right version for your computer. Please note that the Visual Studio Express 2012 (or 2013 or later) edition should be adequate for this course, and is free for everyone.  Some students have mentioned that it is necessary to use Visual Studio Express 2012 (or 2013) for Windows Desktop rather than just VS 2012 (2013/later) express for Windows.  The current version is Visual Studio Community 2017 (the instructions below for VS 2015 should still apply).  If you install this version of VS 2015 (or 2017), please ensure that you select the "Common Tools for Visual C++ 2015 (2017)" feature under "Programming Languages"/"Visual C++". If the above step isn't done correctly, the skeleton code may not be upgraded properly. If you installed Visual Studio 2015 or 2017 without this feature, you can re-run the installation program and modify Visual Studio to add the feature.  Please note that by default, VS 2015 does not include C++ support.  You must explicitly select C++ support in the installer when installing Visual Studio 2015.  (Otherwise only C# is supported, and you will get a bunch of errors with missing header files when compiling).
+
+(Please note that we use a VS 2012 skeleton for backwards compatibility.  If you are using VS 2013 or VS 2015/2017, the skeleton will still work; you only need to click OK in the conversion/upgrade dialog once you open the skeleton code.  Similarly, if you are running on Windows 10, it may warn that the skeleton is configured for Windows SDK 8.1.  Please follow the instructions to retarget the solution.)  
+
+If you are having issues taking screenshots, you can either manually crop a print screen (printscreen button) or use Fraps to take a screenshot (the manual method may be harder for later assignments however). Some students have reported that this issue can be fixed simply by changing the code to save the back buffer instead of the front (this is in the third line of the saveScreenshot() procedure in mytest3.cpp), that is by using
+
+glReadBuffer(GL_BACK);
+(Only) if you run into issues with 32/64-bit compilation, make sure your platform target says Win32, rather than x64.
+
+---
