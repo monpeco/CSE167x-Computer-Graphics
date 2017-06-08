@@ -1140,3 +1140,194 @@ glReadBuffer(GL_BACK);
 (Only) if you run into issues with 32/64-bit compilation, make sure your platform target says Win32, rather than x64.
 
 ---
+
+
+#### Unit 1   Lecture 3: Transforms 1   L3V3: TRANSFORMS 1: 3D ROTATIONS
+
+# L3V3: TRANSFORMS 1: 3D ROTATIONS
+
+### L3V3: Transforms 1: 3D Rotations
+
+https://youtu.be/LazSPnaoJ_Q
+
+> In this segment of the course we are going to talk about 3D rotations.
+> 3D rotations is a topic that has engaged many of the greatest minds of
+> our civilization over centuries. It's also a topic in which I have a
+> special interest because my first academic SIGGRAPH paper was on
+> interpolating 3D rotations. First let's review the 2D case. In that
+> case we know that the new coordinate x' is given by cosine theta times
+> x minus sine theta times y. y' is given by sine theta times x and
+> cosine theta times y. One of the important properties of this matrix
+> which we haven't talked about so far is that it's orthogonal. Most
+> directly that means R transpose R is the identity (R^T * R = I) and in
+> fact we can multiply that out explicitly. I am just going to use c for
+> cos and s for sin. The transpose matrix will be given by cos, sin,
+> -sin, cos and I have to multiply this by cos, -sin, sin, cos. Okay, so now notice what happens here. Cos times cos is cos squared, sin times
+> sin is sin squared. But you know that cos squared plus sin squared is
+> equal to 1, so this is just 1. cos times -sin is -sin cos sin times
+> cos is sin cos. This is equal to 0.
+> -sin times cos, -sine cos plus cos times sine is plus cos sine, so that will be equal to
+> 0. And finally, you have -sin times -sin, sin squared, plus cos squared, which will be equal to 1. So, indeed, that's equal to the
+> identity. There are also other interpretations of this. What we mean
+> when R transpose R is the identity is that columns and rows are
+> orthogonal. So if you look at a column like this, cos sin times -sin
+> cos, -cos sin, sine cos will be equal to 0. Column dot product with
+> itself, cos squared plus sine squared is equal to
+> 1. Let's now consider rotations in 3D about the coordinate axes. The 2D case could be considered a special case where we're rotating about
+> the Z axis. Since the Z axis therefore does not change, the matrix
+> values will be 0, 0 and 1, 0, 0 and 1. And the X and Y coordinates
+> will be the same as before: cos, -sin, sin cos. Similarly for rotation
+> about the X axis, 1, 0, 0, 1, 0, 0, cos -sin, sin cos. Y axis
+> similarly here. Since Y is equal to Z cross X, it's a little bit
+> different from these where the cos, -sin, sin, cos are together but it
+> still has the same form. All of these cases are orthogonal, R
+> transpose R is the identity. And even in 3D because it's a matrix, it
+> must follow that it's linear. We now come to the geometric
+> interpretation of 3D rotations. We can think about the rows of the
+> matrix as being unit vectors of a new coordinate frame. So, we can
+> think of this as being the u vector, the v vector, the w vector, where
+> x_u is the X coordinate of the u vector, y_u is the Y coordinate of
+> the u vector, and z_u is the Z coordinate of the u vector. Similarly
+> for the v vector and the w vector. When I say the u vector is the axis
+> of the new coordinate frame, the vector u will be equal to x_u times
+> the X direction plus y_u times the Y direction, plus z_u times the Z
+> direction. The corollary of this is that given 3 orthonormal vectors,
+> and orthonormality means that, this u vector dot with v vector has to
+> be equal to 0, u vector dot with w vector has to be equal 0, v dot w
+> has to be equal to 0, and u, v and w are unit vectors. So given any 3
+> such vectors it's just a rotation of the standard XYZ coordinate
+> systems and we can create a rotation matrix from there. There's also
+> another interesting way of thinking about this which is that the
+> rotation matrix times a point. What happens? So we can write down the
+> rotation matrix in this form. So we have the u vector, the v vector
+> and the w vector. All of these are vectors, times a point, right. So
+> we have the point p here. Okay. So what's going to happen is you are
+> going to say, u, x_u, x_p, y_u, y_p, z_u, z_p. That's just u dot p. So
+> this will be equal to u dot product with p, v dot product with p and w
+> dot product with p. So really, what we are doing is just taking the
+> projections of the point p in this new coordinate frame. So we have u
+> dot p, v dot p and w dot p. This is a very simple interpretation of 3D
+> rotations that you have a new coordinate frame and you're taking the
+> dot product of a point p in this new coordinate frame. To summarize,
+> the rows of a matrix are 3 unit vectors of the new coordinate frame,
+> rows of a rotation matrix. We can similarly construct a rotation
+> matrix from any 3 orthonormal vectors. Effectively this is a
+> projection of a point into the new coordinate frame. So the new
+> coordinate frame, or the rotation matrix associated with it, takes the
+> u, v and w coordinates to the cartesian components X, Y and Z. Its
+> easy to see. So, if x_p, y_p and z_p correspond to u, then you have u
+> dot p, which is u dot u, which will be 1, 0, 0. The v axis will become
+> Y, the w axis will become Z. The inverse of this rotation matrix takes
+> the XYZ axes to u, v and w. That's a useful property to note that a
+> coordinate frame can be interpreted as stating these new coordinates
+> u, v, and w, and making them equal to X, Y, and Z. The inverse can be
+> interpreted as taking X, Y, and Z, and making them equal to u, v, and
+> w. 3D rotations are not commutative. In particular if you rotate by X
+> and then by Y it's not the same as rotating by Y and then by X. So
+> here we have our teapot in the standard coordinate system and the
+> thing that I am going to do is move my right. So I am going to count
+> 20 steps right. 1, 2, 3, 4, 5, 6, 7, 8, 9, 10.
+> 11. And similarly go up 1,2,3,4,5,6,7,8,9,10,11. And you can see here that the teapot is aligned in this way. It's essentially in a diagonal
+> position from the bottom left to the top right. Take a look and
+> remember where the teapot was here because now I am going to go and do
+> it the other way. So, I'm going to do 11 steps like this: 3, 4, 5, 6,
+> 7, 8, 9, 10, 11 and then, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 and now
+> the teapot is certainly not positioned along the diagonal from top
+> left to bottom right and it actually looks fairly different. When you
+> complete homework 1, I would encourage you to try similar kinds of
+> experiments to convince yourself that 3D rotations are not
+> commutative. This of course follows directly from matrix
+> multiplications, applying R1 times R2 is not the same as R2 times R1.
+> Finally the question is, can we come up with an arbitrary rotation
+> formula for 3D rotations? The setup is as follows, I want to rotate by
+> an angle theta, about an arbitrary axis a. This is known as the
+> axis-angle form of rotations, there are many other ways of specifying
+> rotations. You may want to look up quantities like, the Euler angles
+> or quaternions. But, so far we are just going to talk about axis-angle
+> rotations. This has particular importance for homework 1, where you
+> must rotate the eye and the up direction as you move about the teapot.
+> The derivation is fairly mathematical and we will be going through the
+> key steps in it. The final formula is reasonably simple and is useful
+> to you. So lets look at the problem setup. You have to rotate a vector
+> b or a point b by an angle of theta about the axis a. If you want to
+> do a sanity check on what follows, it's convenient to say b is the X
+> axis and a is the Z axis. So rotation by an angle theta is just
+> rotating a point on the X axis towards the Y axis. And in this way,
+> you can verify that we do in fact get the right results. But we are
+> going to derive it generally for b and theta. This derivation is
+> carried out in 3 steps. We can regard this as the vector a, and we can
+> regard this as the vector b. So it's going to rotate about a by some
+> angle theta. So in this case, b will actually be rotating into the
+> plane of the slides. So before we do the rotation there are some
+> properties about b that we can consider. So if you look at b it has a
+> component which is orthogonal to a and it has a component which is
+> along a. So we can write this as the parallel and the perpendicular
+> components of b along a, so that this is the parallel component and
+> this is the perpendicular component. The parallel component of b just
+> lies along the vector a. And therefore, it is unchanged. And this is
+> just as you rotate about a given axis, that axis will remain
+> unchanged. Now, we know what the formula for the vector b, the
+> component along a is. And that is just going to be given by the
+> quantity a dot b. So we can consider the dot product of a and b.
+> Assuming that both of these quantities are unit vectors, so no
+> normalization is needed. And that lies along the direction, a. So
+> that's what b parallel is equal to. And b perpendicular is essentially
+> equal to the vector b minus the parallel component. The second part of
+> our formula says, what happens to the vector b when it rotates? And
+> therefore we need to define a vector c, which is orthogonal to both a
+> and b and in this case, would be into the plane of the slides.
+> Remember I told you to think about the vector a as the Z axis and the
+> vector b as the X axis. So if you rotate the X axis about Z you
+> eventually go to the Y axis and so the vector c should be the Y axis.
+> In general there will be a definition in terms of cross products. And
+> we can define the vector c as being equal to a cross b. The nice thing
+> is that the cross product automatically takes into account the
+> parallel component and so it takes into account the magnitude of the
+> perpendicular component, which is nice. So we want this a cross b but
+> the amount of rotation matters. So the component along c will be equal
+> to c times how much you are rotating. Only sin theta will actually be
+> rotated, and then the remaining component is just going to be the b
+> perpendicular component times cosine theta. And finally, we have the
+> parallel component which doesn't change. Putting it all together we
+> get this formula. This formula requires that we consider matrices, so
+> so far we have considered the components in terms of vectors. But we
+> can convert those into a representation of matrices. But first let's
+> consider the parallel component, which is the component along a, which
+> is unchanged. We saw here that this is going to be a dot b times a,
+> but we want to write this in matrix and vector notation. So this is
+> going to be equal to a transpose b times a ((a^T b) * a). All that
+> I've done since this quantity is a scalar, I can move the a to the
+> other side and rearrange it to get a a transpose times b ((a a^T) *
+> b). I can now do the same thing for the other components so c is equal
+> to a cross b and so here we said a cross b times sin theta. So this
+> value is equal to a cross product of b times the sin. Right? Sin
+> theta. Okay, but a cross b, we already know that cross products can be
+> written in terms of this dual matrix which is "A star" (A*), takes
+> into account sin theta so, a cross b is equal to A* times b and we
+> have the sin theta. Finally, we come to the component along a which is
+> unchanged so, this is the perpendicular component which will be given
+> by the identity -a * a transpose, perpendicular will be given by b
+> minus b parallel. This will be equal to the identity minus a * a
+> transpose. Because we have here a * a transpose identity minus a * a
+> transpose. And that gets multiplied by cosine theta. What happens to
+> the perpendicular component? You get identity, minus a * a transpose,
+> both multiplied by cosine theta, plus A* sin theta. And all of these
+> are eventually multiplied by the vector b. So now the rotation can be
+> written as some general matrix, which we'll say is some M times b (M *
+> b). So, we have identity times cosine theta, which is just the
+> unchanged component of the vector. And then we have, a * a transpose
+> here which is one and minus the cosine theta component here. And this
+> is the component along the vector a, which is unchanged, and finally
+> we have the perpendicular, rotated component A* sin theta. So, finally
+> this is the rotation formula for general axis-angle. If you didn't
+> fully follow the derivation, that's okay. In homework 1, you only need
+> the final formula, but I hope I've given you some intuition for why
+> this fairly complicated formula comes about. I can also simplify that
+> further and so if x, y and z are the Cartesian components of the
+> vector a, then the rotation matrix can be written in this way, it's a
+> quadratic form in components of the vector a and this is often known
+> as the Rodrigues rotation formula.
+
+
+---
+
