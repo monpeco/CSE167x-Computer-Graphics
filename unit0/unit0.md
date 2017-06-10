@@ -1580,3 +1580,88 @@ https://youtu.be/dkWVytJd5_g
 > translation.
 
 
+---
+
+#### Unit 1   Lecture 4: Transforms 2   L4V2: TRANSFORMS 2: TRANSFORMING NORMALS
+
+# L4V2: TRANSFORMS 2: TRANSFORMING NORMALS
+
+### L4V2: Transforms 2: Transforming Normals
+
+> In this segment, we will talk about transforming normals. So far, all
+> of our activity has been about transforming geometric objects and
+> points on the surface. However, the surface orientation of the surface
+> normal is also critical for computer graphics. One important use is in
+> lighting. The intensity you see from the surface depends on the angle
+> between the light source and the surface normal. For highlights on the
+> surface it depends on the angle between the viewer, the surface normal
+> and the light source. And the normals do not transform the same way as
+> surface positions. To see why, we can look at this diagram. Here, I've
+> just shown the effect in 2D, and that's all you need to really
+> understand it. I have a rectangle, and of course, the surface normals
+> are pointing straight upwards. I now apply a shear to the rectangle,
+> and so it becomes a parallelogram like this. But of course, the
+> surface is normal on the top is still pointing upwards. However, if I
+> were to apply the same transformation as I apply to the geometry,
+> imagining the normals attached to the geometry in this part of the
+> geometry of the object. Then when I shear it, what is going to happen,
+> is that it is going to move, because I'm moving points here more than
+> I'm moving points here. And so, while this point will move a little
+> bit in the direction of the shear, this point will move more. And so,
+> the normal will appear tilted, when that's not really the case. So
+> therefore, we need to derive the correct transformation for the
+> surface normals. And we will go through some algebra, which is the
+> easiest way to see how they deform. If you want to think about this,
+> also think about the transformations in a circle when it's stretched
+> into an ellipse. The normals will not transform the same way as the
+> geometry. In fact, they'll transform in the inverse way in a certain
+> sense. So, to find the normal transformation, we consider a point on
+> the surface, and we consider the geometric location around it. So, we
+> consider a plane around the point, here is the point, here is the
+> normal, here are some points on the plane, which we consider the
+> tangents. Tangents are actual geometric locations on the surface and
+> they transform just as the same transformation matrix on the surface,
+> so M times t. Normals transform with another matrix which we'll call
+> Q. And the question is, what is Q equal to? One of the important
+> things we know is that the normal has to be at 90 degrees to the
+> tangents, so its dot product with respect to the tangents has to be
+> equal to 0. This is the basic definition of a plane or the definition
+> of normals. So n dot t has to be equal to 0. Now, the question is, we
+> want to solve these equations, and we want to find what the matrix Q
+> is. But, this is the condition, n transpose T is = to 0 (n^T t = 0).
+> So n is equal to QN. And so let's transpose that. So let's look at QN
+> transpose ((Qn)^T). Now when you transpose, you transpose the
+> individual elements. And you invert the order in which they apply. So
+> this will be equal to n transpose times Q transpose ( (Qn)^T
+> = n^T * Q^T ). And t will be equal to Mt. So we will have this times Mt is equal to 0. So I've just reproduced that here. So I have n
+> transposed, Q transposed Mt is equal to 0 ( n^T * Q^T * Mt = 0 ). And
+> this implies that Q transposed M must be equal to the identity ( Q^T *
+> M = I ). This is because this must hold for any n and t in order to
+> get the original condition that n transposed t is equal to 0. So of
+> course, if Q transposed M is equal to the identity, it's very easy to
+> solve for the matrix. And we have that Q is equal to M inverse,
+> because I multiplied by M inverse on both sides and then I have to get
+> rid of the transpose and so I take M inverse transpose ( Q = (M^-1)^T
+> ). One point I want to make very clear, since we've just had the
+> discussion of homogeneous coordinates, is that this inverse
+> transposition is applied to the upper 3x3 matrix only. So it's applied
+> to the upper 3x3 matrix only. It doesn't really apply to the
+> homogeneous coordinates, and in particular the normal, being a vector,
+> isn't really acted on by translations. And so, what you do to the
+> translational coordinates doesn't matter. But, in order to change this
+> vector you do have to apply this inverse transpose to the upper left
+> 3x3, which includes things like rotations and shears, and so I'll also
+> say there is no effect of translation, right. So no T translation
+> applied. Finally, we have the formula here. Q is equal to M inverse
+> transpose ( Q = (M^-1)^T ). And this formula must be applied to all
+> surface normals.
+
+---
+
+#### Unit 1   Lecture 4: Transforms 2   L4V3: TRANSFORMS 2: ROTATIONS AND COORDINATE FRAMES
+
+# L4V3: TRANSFORMS 2: ROTATIONS AND COORDINATE FRAMES
+
+### L4V3: Transforms 2: Rotations and Coordinate Frames
+
+
