@@ -1752,3 +1752,106 @@ https://youtu.be/dkWVytJd5_g
 # L4V4: TRANSFORMS 2: DERIVATION OF GLULOOKAT
 
 ### L4V4: Transforms 2: Derivation of gluLookAt
+
+> In this final segment of lecture 4, we have achieved all the tools
+> needed to derive gluLookAt, which is a key OpenGL component for
+> viewing. And it's really a case study, of course immediately relevant
+> to homework 1, but really a case study on how you can use all of the
+> ideas you have to derive this relatively complicated 4x4
+> transformation matrix that can be used to view objects and position an
+> arbitrary camera in the world. The function we are going to talk about
+> positions the camera, and is therefore fundamental to how we look at
+> images. Let's talk about the parameters for a moment. So you have the
+> x coordinate, y coordinate and z coordinate of the eye. You have the,
+> x, y and z coordinates of the center, which is where it is looking at.
+> And, you have an up vector of the camera, which is, what is the up
+> direction of the camera? And that is important for determining what
+> parts of the image are on the X axis and the Y axis. What is the
+> orientation of the image with respect to the world? It corresponds to
+> rotating your camera. The eye location corresponds to where you place
+> your eye, or your camera. Whereas, the up direction corresponds to the
+> orientation or heading of the camera, or equivalently how you rotate
+> your head. And really the key thing is, this combines many of the
+> concepts discussed in the last two lectures and gives you a practical
+> example of how you solve problems. It involves 3 main steps to derive
+> the matrix. First we need to create a coordinate frame for the camera.
+> Then we need to create a rotation matrix corresponding to the camera's
+> coordinate frame. And finally, we need to apply a translation for the
+> camera, or the eye location. In the basic math lecture, and we talked
+> about vectors and orthonormal basis frames, we introduced the notation
+> and the way in which we can create the coordinate frame. So
+> essentially you have a vector a and a vector b, in this case given by
+> the direction of u, which is the difference between eye and center,
+> and b which is the up direction. But of course these might not be
+> orthogonal nor unit norm, and you also need to find the third axis of
+> the coordinate frame. So what you do is, first you create the w
+> vector, which is just normalizing a, and that's equivalent to Z axis.
+> And then of course you have to remove the components of v which fall
+> along w, and instead of doing that explicitly, a more elegant way is
+> to find the u vector which is b cross w and so the cross product
+> automatically removes the appropriate components. And finally, you can
+> create v as w cross u which is an identity that must hold in an
+> orthonormal coordinate frame. So we will go back to this early
+> construction we saw in the basic math lecture. In order to create the
+> coordinate frame, of course you have to know what is my a and b that
+> I'm given, and so I've rewritten what w, u and v are here, but I need
+> to know what's a and b. And let's go back to our problem statement. We
+> want to position the camera at the origin, looking down the -Z
+> direction. In OpenGL, you always have a camera at the origin looking
+> at (0,0,-1). So it's looking at -Z direction. Therefore, center - eye,
+> you want to move that to the -Z direction. Therefore, the +Z direction
+> will be given by eye - center. And that's what the vector a is given
+> by, eye - center. The vector b is then simply the up vector, and those
+> are your two vectors, a and b, eye
+> - center and eye. So from that, you can compute the vectors u, v and w using the formulae discussed earlier. But the main reason for doing
+> that is you want to create a coordinate frame and a rotation matrix.
+> So then we go back to what we discussed earlier in this lecture and
+> also in the next lecture, in previous lecture, that the rows of the
+> rotation matrix are the 3 unit vectors of the new coordinate frame. So
+> given be u, v and w, you can define, you know the x, y and z
+> coordinates of u, x, y, and z coordinates of v, x, y, and z
+> coordinates of w. The rows of the matrix of are the vectors u, v and
+> w. And so, you have constructed a rotation matrix for the camera. The
+> final step is that you need to apply a translation for the camera, or
+> the eye location. And this, is a little bit of a trick question. Do
+> you do the rotation first or the translation first? And that's what we
+> talked about earlier in the lecture. The important point to note is
+> that you cannot apply the translation after the rotation. Think about
+> it, you have a camera. And, so, you can think about it in 2 steps.
+> First the camera is looking down the -Z axis. It's moved to the
+> appropriate location in the world, so you have to apply to the inverse
+> translation to the world. And then, it's positioned appropriately,
+> which corresponds to the rotation. So the translation must come first
+> to bring the camera to the origin before the rotation is applied. How
+> do we combine translations and rotations? Again, I'm just repeating
+> slides earlier in the lecture. The main point of this segment is to
+> show easy application of the way you can use all of the knowledge I've
+> been talking about. So if I do translation first and then rotation I
+> have an effective translation, which is rotation times translation. So
+> the rotation matrix times the translation vector. In this case, the
+> translation vector is the eye coordinate or really the -eye
+> coordinate, because I have to do the inverse translation to the world.
+> And the rotation matrix are the u, v, and w coordinates of the new
+> coordinate frame. Take the rotation matrix, and I take the translation
+> vector, which is -eye. And now, I multiply these together. So, of
+> course, the rotation part doesn't change, and I'm not interested in
+> that. So I'll just talk about how the translational components will
+> change. And you notice here, I'm going to have x_u * -e_x, y_u * -e_y,
+> and z_u * -e_z. This just corresponds to a dot product of the vector
+> u, and the vector e, of course with the negative, and therefore these
+> things will become, -u dot e, -v dot e, and -w dot e. Of course, do
+> not confuse this w vector with the w homogeneous coordinate, which is
+> just 1 in this case. In fact, in the earlier segments, we did derive
+> this form, for this is what happens, that when you rotate a particular
+> vector, it's equivalent to considering its projection in terms of the
+> new u, v and w. And just writing this down explicitly, we derive the
+> formula shown here. And this is the final form of gluLookAt. Some
+> components of this you will need in homework 1.
+
+--- 
+
+#### Unit 1   Lecture 5: Viewing   L5V1: VIEWING: ORTHOGRAPHIC PROJECTION
+
+# L5V1: VIEWING: ORTHOGRAPHIC PROJECTION
+
+### L5V1: Viewing: Orthographic Projection
