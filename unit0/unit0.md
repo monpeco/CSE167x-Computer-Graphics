@@ -1664,4 +1664,91 @@ https://youtu.be/dkWVytJd5_g
 
 ### L4V3: Transforms 2: Rotations and Coordinate Frames
 
+> In this segment we are going to revisit rotations in both 2D and 3D,
+> and talk a little bit about coordinate frames. So far, all of our
+> discussion has been in terms of operating on points. But one can also
+> change the coordinate system and in fact, these are equivalent ways of
+> thinking about transformations. For example, if I move towards you, it
+> can be interpreted in two different ways. Either you think of the
+> coordinate system as anchored to yourself and I am actually moving
+> towards you, or you think of the coordinate frame moving backwards and
+> moving away from me. So let's look at this with an example. Here we
+> have a point which is located at 2 units along the X axis, 1 unit
+> along the Y axis. I can now translate that point to the left, so I can
+> move it to the location (1,1) in both axes. So this would be a left
+> translation. I can also see this as a change in coordinate frame,
+> where the coordinate frame moves to the right. And so the point item
+> moves 1 unit to the left, or the coordinate frame moves 1 unit to the
+> right. And both of these interpretations are equivalent, and you can
+> use the interpretation that's more useful in a specific task. So the
+> reason I brought this up is that in many cases, you want to define a
+> coordinate frame which is anchored to a specific person, to an object,
+> to the world, etc. And in many cases, you want a particular physical
+> location in the world to be transformed between coordinate frames. In
+> general, coordinate frames can have both translation and rotation. The
+> center can be somewhere in the world and they can be transformed by
+> orientation; their axes can be different. So here you have the world,
+> and you have an origin in world space, x and y axes. In the camera
+> coordinates you have some eye location in u and v, which are the
+> equivalent for x and y. So let's look at a point p, and we want to
+> find the coordinates of a point p. So in world space, it's let's say 2
+> units along the x axis, 0.9 units along the y axis. In the same point,
+> in the camera coordinates, it's different. So it's some location along
+> u. Let's say .5 along u, and -.6 along v. And in many cases, one wants
+> to do this. One has a geometric location in the world, even in
+> homework 1 on your teapot. And one wants to figure out where it lies
+> in camera coordinates, that has to take into account both the
+> rotational coordinate system of the camera, as well as where the
+> camera is located, and what the eye coordinates are. Let's go a little
+> bit further and talk about new interpretation of 2D rotations. If you
+> remembered my derivation of 2D rotations, I said a point P moves to
+> P', and the point P makes some angle alpha with the axis. The angle of
+> rotation is theta. And so you eventually make an angle of alpha plus
+> theta. If you write out the coordinates x and y and you simplify the
+> trigonometric identities, eventually you get a rotation matrix like
+> this which is which is cos theta times x minus sin theta times y sin
+> theta times x plus cos theta times y. So this is your rotation axis.
+> Of course following the key of rotating points versus rotating
+> co-ordinate systems, one can think about the point as being fixed, but
+> the coordinate system rotating in the inverse way. And, indeed, this
+> is what the coordinate system rotation looks like. This is the new u
+> axis; this is the new v axis. And the coordinate system is rotated
+> clockwise by theta, whereas the point was rotating counterclockwise by
+> theta. So what are the coordinates of the new u and v directions? And
+> we'll derive these in a moment. If we look at what the x coordinate
+> here is, this so since the axis are of unit norm, this distance is
+> going to be cosine of theta. And this length is going to be minus sine
+> of theta. So, the u coordinates are actually going to be given by cos
+> theta minus sine theta, that's u. And v coordinates will be given by,
+> this angle will again be equal to theta and so you can see along the x
+> direction, the v coordinate will be given by sine theta, so I can
+> write this as sine theta, and along the y direction this will be
+> cosine of theta. And in fact, that's what this is. Sine theta, cosine
+> theta. So the rows of the rotation matrix can really be regarded as
+> the coordinates of the new axes. And in fact that's what it is. So the
+> uv coordinates of the new axes are equal to cos theta x minus sin
+> theta y, sin theta x cos theta y, of the old axes. And this leads to
+> the nice geometric interpretation of 3D rotations which we also talked
+> about earlier. Which is the rows of the matrix are 3 unit vectors of
+> the new coordinate frame. And one can construct a rotation matrix from
+> any 3 orthonormal vectors. And in fact, the u coordinates are just
+> x_u, y_u, z_u. v coordinates similarly and w coordinates. Finally I
+> want to briefly revisit the axis-angle formula that we derived in the
+> previous lecture. And I won't go over all of the derivation before,
+> but the essential parts are there is a part which is the identity of
+> cosine theta, then there's the a * a transpose part, then there's the
+> dual matrix and the cross product part. I mainly put this slide up so
+> that it can be useful for you for revising when you do homework 1. The
+> identity 1 minus cos theta times this matrix. It has quadratic
+> components and then sin theta times this cross product matrix. That
+> will be what the rotation matrix looks like. All of this gives you
+> enough material that we can actually derive the 4x4 matrix for
+> gluLookAt which is a large component of what you need to do in
+> homework 1.
 
+---
+#### Unit 1   Lecture 4: Transforms 2   L4V4: TRANSFORMS 2: DERIVATION OF GLULOOKAT
+
+# L4V4: TRANSFORMS 2: DERIVATION OF GLULOOKAT
+
+### L4V4: Transforms 2: Derivation of gluLookAt
