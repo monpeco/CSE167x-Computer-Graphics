@@ -1855,3 +1855,152 @@ https://youtu.be/dkWVytJd5_g
 # L5V1: VIEWING: ORTHOGRAPHIC PROJECTION
 
 ### L5V1: Viewing: Orthographic Projection
+
+> So far, we have considered transformations that are entirely in 3D. So
+> they deal with how do you take an object in the 3D world and place it
+> somewhere else in the 3D world. In this lecture we're going to talk
+> about viewing, because ultimately we look at computer graphics images
+> that are 2 dimensional, and therefore we have to take this 3D world
+> and project it into a 2D image. While we're talking about computer
+> graphics, we are of course inspired by similar processes that occur in
+> the human eye and in real cameras. We have seen transforms so far
+> between coordinate systems but of course all of that is 3D. How do you
+> go from 3D to 2D, and how do you project the 3 dimensional space to
+> the 2 dimensional space is the fascinating topic that this lecture is
+> about. I'm going to start off by showing you a demo with this
+> projection tutorial. These come from Nate Robins' OpenGL tutors. And
+> if you just search on the web for that, you will see many interesting
+> tutorials that give you a good understanding of several aspects of 3D
+> computer graphics, and also how to implement them in OpenGL. So here,
+> we have our projection tutorial. And so what it shows is the world
+> space view on the left, and the actual image that you see on the
+> right. So what I can do here, is that I can increase the field of
+> view. And, as I increase the field of view, you'll see that the man
+> becomes smaller; as I decrease the field of view, he becomes larger.
+> And that's because I'm looking at a smaller region. So that is one
+> parameter of my viewing transformation. I can also change the aspect
+> ratio, which affects the width to height. And, finally I have the
+> zNear and zFar which are the near and far clipping planes. They don't
+> really do anything until I pass them through the object, and then you
+> lose some of the object. In this lecture, we are going to understand
+> all of these concepts, and derive the matrices that are actually used
+> in OpenGL. To summarize what we've seen so far, we've seen
+> transformations, translation, rotation, scale, and how to put them
+> together. All of this is done using 4x4 homogeneous matrices. And so
+> far, they were motivated primarily by the ability to capture
+> translation. However, 4x4 matrices are also useful to capture viewing.
+> And, indeed, there is a unified way to write the entire transformation
+> pipeline. The last row in these matrices has always been so far [0 0 0
+> 1], just keeping the w coordinate unchanged. For viewing
+> transformations, we will play with this last row, as well as other
+> parts of the matrix. This segment deals with orthographic projection,
+> which is the simplest one. And then we'll deal with perspective
+> projection, which is the most common way in which images are created.
+> First, consider the problem formally. You have 3 dimensional space,
+> and you want to project it down to 2 dimensions. That's essentially
+> the meaning of projection. One obvious way of doing that would be to
+> take your 3 coordinates in the 3 dimensional space, and drop one of
+> them to a 2 dimensional space. Indeed orthographic projection, at a
+> high level is just taking X, Y, Z of your 3D space and dropping the Z
+> coordinate, so you get X, Y on the screen. It preserves straight
+> lines, which is one of the main advantages of it, and it looks
+> something like this. So, one of the characteristics of orthographic
+> transformation is that parallel lines remain parallel. Some of you
+> here may remember if you see images of, for example, railroad tracks.
+> Those are clearly parallel lines, but in a standard camera image they
+> will seem to be getting closer together till they meet in the far
+> distance. You of course never see them meet, they meet only at
+> infinity, but they get closer to each other. That's because the image
+> was created using perspective projection. With orthographic
+> projection, the parallel lines remain parallel. And, this is useful
+> for many technical drawings to convey the view of the object. And you
+> may, for example, take an orthographic view along each of the X, Y,
+> and Z axes. So here I've drawn an example of the cube, and you'll see
+> with the perspective transformation, parallel lines are no longer
+> parallel. The cube is somewhat distorted. Whereas in the orthographic
+> case, we maintain those parallel lines. What we're going to talk about
+> now is the general form of the orthographic transformation. It's
+> something known as glOrtho. And we'll just go over it as a warm-up to
+> derive the formula for gluPerspective for perspective transformations.
+> The basic idea for the general orthographic transformation is that you
+> have a cuboid in world space. So here is your cuboid. You want to map
+> that cuboid first to the center it, and then finally map it down to
+> the unit cube, and indeed all of the transformations we'll see,
+> gluOrtho, gluPerspective essentially compute a mapping of some region
+> of the world down to unit cube. Of course, you can argue that this
+> mapping is still 3 dimensions so, what's going on? But the idea is
+> that once we map it to the unit cube, then we can just drop the Z
+> coordinate and look at the XY coordinates. So, how do we go about it?
+> The first thing is that we need to define the axes of the cube. And
+> so, since it's a cuboid which is parallel to the X, Y, and Z. The left
+> and right components are just l and r, and that corresponds to these
+> faces, so this face here, this face here, that's the left and right.
+> The near and far already lie along the Z axis. So the near plane is
+> the closest location and the far plane is the furthest location. And
+> then we have top and bottom so, top and bottom. So I am just reprising
+> the different steps that you are going to take, where you first center
+> the cuboid and then you scale it into the unit cube, and for each of
+> these steps we can derive the appropriate matrices. And the idea is as
+> follows. I have my cuboid, I am going to draw it here. And so firstly
+> these are l and r. l and r, and this must go to something that is
+> centered. And so we want it to have the same length. But now, this
+> point must move to the center. And, of course, the translation that
+> will make that happen, is to consider the central location here, which
+> must be equal to (l + r) / 2. And therefore the translation will be
+> the negative of this, in order to bring this to the center. Similarly,
+> for top and bottom, you will have minus, top, plus bottom, over
+> 2. And, that will be the case for the near and far planes as well. I'm not going to write that down, but that will be minus far plus near
+> over 2. The next question is what happens to the scale, and of course
+> the scale will depend on the inverse of this length, so this is the
+> translation, and now let's look at the scale. In this case, you will
+> look at this total extent, and will want to scale that into the unit
+> cube. In this case, the unit cube goes from -1 to +1. So this total
+> extent will go from -1 to +1, which is a total of 2 units. So of
+> course, the scale will be 2 units divided by the original length. So
+> this will be equal to 2 / (r - l). 2 divided by r minus l, and
+> similarly 2 divided by t minus b, and 2 divided by far minus near. So
+> let's look at what this look like, the scale matrix is 2 / (r - l), 2
+> / (t - b), 2 / (f - n). Notice that the scale comes second, the first
+> step is the translation. And the translation is left plus right
+> divided by 2 with an minus sign. Top plus bottom divided by 2. Far
+> plus near divided by 2. And so far I've left the homogeneous
+> coordinate row the same. One can multiply this out and it's easy to
+> see what happens. It's similar in many ways to what we did if you do
+> translation first and then rotation. So the upper left 3x3 remains
+> from the scale, and you can see that quite clearly. But for the
+> translation, you have to multiply the scale by the translation. And so
+> 2 and 2 cross out, but you get minus l plus r over r minus l. And that
+> can be within as l plus r over l minus r. As an exercise you might
+> want to multiply this out, together, yourself. There is one final
+> change that needs to be done to get the glOrtho formula. Which is that
+> in Open GL, the convention is that you're looking down the -z axis.
+> Therefore, n and f are both negative numbers. So n is closer than f,
+> and it's a smaller negative number than f. However, when you specify
+> the arguments, you specify n and f as positive values. And therefore,
+> in the formulae, you have to replace n by -n, and f by -f. Which, all
+> it does is it changes 1 sign to negative. And, in particular, the
+> formulae for M is, again, the upper left 3 by 3 doesn't change. It's 2
+> by r-l, t-b, f-n. And here, r+l, r-l, top plus bottom, top minus
+> bottom and so on. But there is one sign change that happens when you
+> replace far and near by their negative values, which is that this sign
+> changes. And that's the final formula for glOrtho. Why have I
+> introduced the derivation of these formulae, gluLookAt in the previous
+> lecture and glOrtho in this lecture? Because, eventually, when you
+> actually design a scene using OpenGL, what it does is it takes all of
+> the geometric points, and it transforms them by a 4x4 matrix. Of
+> course, you can, and if you're writing in OpenGL, just specify glOrtho
+> with some intuitive parameters. But, of course, the goal of this
+> course is to understand how the 3D pipeline works. And therefore, you
+> need to understand the basics of orthographic and perspective
+> projections, and how one creates 4x4 matrices that one actually uses,
+> from them.
+
+
+---
+
+#### Unit 1   Lecture 5: Viewing   L5V2: VIEWING: PERSPECTIVE PROJECTION
+
+# L5V2: VIEWING: PERSPECTIVE PROJECTION
+
+### L5V2: Viewing: Perspective Projection
+
