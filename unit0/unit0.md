@@ -2072,4 +2072,170 @@ https://youtu.be/dkWVytJd5_g
 
 ### L5V3: Viewing: gluPerspective
 
+> At the end of the last lecture, we derived gluLookAt transformation in
+> order to place objects in the 3D world for a given camera. In this
+> lecture, we're going to talk about the gluPerspective transformation
+> which transforms the 3D world appropriately to place objects onto the
+> screen. The entire transformation pipeline will include first, a
+> gluLookAt or equivalent camera transformation, and then the viewing,
+> or the projection transformation. Let's go back to the projection
+> tutorial. We'll notice here that gluPerspective has 4 commands.
+> gluLookAt below has eye, center and up. We already saw this. And
+> again, you can increase the field of view; you can play with the
+> aspect ratio. You can change the near clipping plane. You can change
+> the far clipping plane. So what are all of these different variables,
+> and how do they affect the gluPerspective matrix? Fundamentally, we
+> have a viewing frustum in gluPerspective. Remember that in glOrtho,
+> this was just a cuboid. Because, objects, they stay in the same
+> location regardless of depth. The size remains the same. However, for
+> perspective projection, further away objects become smaller. And so
+> what you really have is a viewing frustum. So we can think of this as
+> being the eye and you can complete the frustum in this way. But any
+> object that lies below the near plane, you block out. And similarly,
+> any object that lies beyond the far plane you block out. That's why
+> you're specifying the near plane and the far plane. And that's why you
+> have a frustum. The next parameter is the field of view, and that's
+> fairly obviously defined. In fact, it's the field of view in the Y
+> direction because the X and Y field of views could actually be
+> different. And you have a screen which has some width and some height.
+> The aspect ratio is the ratio of width to height. We're not going to
+> talk very much about it, but it does need to be considered in deriving
+> the appropriate formula. The gluPerspective command takes in a field
+> of view in the y direction, the aspect ratio, and positive values for
+> zNear and zFar. So although you're looking down the -Z axis, these are
+> distances that are positive. So the field of view and the aspect ratio
+> control the field of view in the x and y directions, and zNear and
+> zFar control the viewing frustum. Here is the overhead view of our
+> screen again, and we will be interested in computing the quantities
+> theta and d. This quantity is theta, and this is given simply by the
+> field of view in the Y direction divided by 2. So the total field of
+> view is 2 * theta. So, this quantity theta we can write as the field
+> of view y divided by 2. Very simple. What is d equal to? Just from the
+> geometry of the situation we want to map things again onto the unit
+> cube. So this is 1 unit. And from trigonometry we know that tan theta
+> is equal to 1 / d, which means d must be equal to cotangent of theta.
+> So d we'll write as cot theta. I've just noted that down again here on
+> the slide. We now need to find the matrix corresponding to this. And I
+> have written it down in the simplest form. The -1 / d here,
+> corresponds to the perspective transformation. So this is just your
+> standard perspective 1 / z transformation. And this is what requires
+> that the z coordinate divide by d and so you get smaller the further
+> away you are. Finally, the aspect ratio is taken into account here,
+> and in this way you can handle different aspect ratios. Since we are
+> in homogeneous coordinates you can multiply all of this by a constant
+> factor without affecting the matrix, and therefore you just multiply
+> the whole thing by d. In this way, this becomes -1, and the other
+> coordinates change accordingly. So we have d by aspect. This becomes
+> d. And here, I've written these as A and B because we're going to play
+> with this lower 2x2 matrix in order to get the near and far planes to
+> map properly. This is all that is required to get z to map properly,
+> so we don't care about x and y. We only care about z and w for the
+> mapping of the near and far planes, which we'll get to next. Normally
+> when I talk about homogeneous coordinates, I say it's a 4-vector. x,
+> y, z and w. However, you can also add a homogeneous coordinate to a
+> single coordinate, z in this case. And so for simplicity, I have just
+> written z and w. I've omitted x and y because we've already found the
+> matrix form for them, and they are not affected by this mapping. So
+> this is, I'll just write down, this is the w coordinate. So let's see
+> what happens here. I will get Az+ B. And this will be -z. Note that
+> this is still in homogenous coordinates. So if I have to dehomogenize,
+> I have to divide by this -z. And I'll get -A - B / Z. So I've just
+> noted that down here. And now we have a system of simultaneous
+> equations that we have to place to consider the near and far planes at
+> the appropriate location. When z is equal to -n, remember that we are
+> looking down the -Z axis. We want this quantity to go to -1, because
+> we are mapping to the unit cube. And when z is = to -f, you want this
+> quantity to go to +1. Because, again, we are mapping from -1 to +1.
+> So, z is equal to -n. I put -n in here. And therefore, I have that -A
+> + B / n is equal to -1. Now, z is equal to -f, is plus 1, I put z is equal to -f in here, and I get similarly an expression like this, -A +
+> B / f is equal to +1. Here, I have a system now, of simultaneous
+> equations for A and B. And so I can solve this. I can subtract these
+> equations, and I'll get a formula for B. I can appropriately scale and
+> multiply them to get a formula for A. I won't go through the algebra
+> here. You can work it out as an exercise. The important thing is to
+> write down the simultaneous equations, which I just showed you. And
+> eventually, you get a formula like this. A = -(f+n)/(f-n), B =
+> -2fn/(f-n). That completes the derivation of the gluPerspective matrix. Indeed, in homework 2, you will be, in addition to using
+> gluLookAt, you will also program in yourself the gluPerspective
+> matrix. Finally, I want to do two things. First, I briefly want to
+> discuss the nonlinear mapping in z. And second, I want to show you a
+> summary of the entire transformation pipeline in OpenGL, which in the
+> last few lectures we have been getting to parts of. I first note that
+> the mapping of z is non-linear, and I've written down again what
+> happens to the z and w coordinates and when you dehomogenize you get
+> -A - B / Z. The nonlinear mapping has A proportional to 1 / z. This nonlinear mapping is interesting. Of course, in principle you don't
+> need to map it this way. And in fact, with the advent of programmable
+> shaders you could in principle take over the z-mapping to whatever you
+> wanted. Some of the more ambitious of you might want to play around
+> with that in homeworks 1 or 2. However, all of the mappings that have
+> been proposed in the literature have these kinds of nonlinearities.
+> And it has an advantage, which is, that it handles a broad range of
+> depths. 1 over infinity is 0. 1 over 100 is .01. They're very similar.
+> You handle the full range. And so, you can have depths from 10
+> centimeters to 100 meters. And in many computer graphic scenes, you
+> do, in fact, have this range of depth. However, and this is a major
+> challenge. The depth resolution is not uniform. The depth is intended
+> to be the maximum near the near clipping plane. And for those of you
+> who can follow along with this, one quick way of seeing this if you
+> differentiate this, this corresponds to depth resolution. It will be
+> proportional to 1 / z^2. And of course 1 / z^2 is small near the near
+> clipping plane, and rapidly degrades as you get further away. So, one
+> common mistake that people write in writing their programs is to set
+> the near clipping plane to 0, the far clipping plane to infinity. You
+> say, "I don't want to deal with the frustum. I'm perfectly happy
+> considering all objects." This is a problem, and in fact, we'll show
+> in a later lecture, I'll show actually programming this in and how it
+> leads to garbage. Because all of the depth resolution then is at 0,
+> then in fact for an object at any positive depth value, you will have
+> zero resolution. When you have limited resolution, all objects go into
+> the same depth bin because in practice you have a finite quantization
+> in the depth buffer and therefore, effectively you can't resolve
+> depths. So therefore, do not set your near clipping plane to zero.
+> With the far clipping plane, you have much more flexibility because it
+> goes as 1 / z, so one over infinity or 1 / 10,000 doesn't really make
+> much difference. But the near clipping plane is more sensitive and it
+> should actually be set to where the geometry in the scene is. Let me
+> finally summarize the whole viewing pipeline. I acknowledge Greg
+> Humphries for originally providing this slide. You start in model
+> coordinates over here. And then you apply a transformation to the
+> model. This is scale translation, rotation, it's a 4x4. You eventually
+> get to world coordinates. Then you apply the camera transformation,
+> gluLookAt, which is what we ended the last sequence of lecture
+> segments with. Now you have things in what are known as eye
+> coordinates. So far, for just projecting geometry, the distinction of
+> each of these individual stages model will die, it's not important,
+> because you concatenate the transformations together. But, one of the
+> critical things is lighting, which we'll talk about in, a few lectures
+> from now. That is performed in eye coordinates. So lighting is
+> performed in eye coordinates, that's important. Because lighting is a
+> 3D concept, and you don't project the scene before you perform
+> lighting. Okay. So, this highlighted region is the perspective
+> transformation gluPerspective which is what this lecture has been
+> about. And once you go through the gluPerspective transformation, so
+> remember that you will apply gluPerspective to the results of
+> gluLookAt, the net transformation matrix will be the projection matrix
+> times, what's known as the ModelView matrix or gluPerspective
+> * gluLookAt. Then you go into screen coordinates, so you're in what's also known as normalized device coordinates. It goes from -1 to +1.
+> It's a cube. After that you have to go through the viewport
+> transformation, which goes to the actual window you're considering,
+> and finally you go to the device coordinates. These 2 steps we don't
+> talk about very much, but notice that if you look at the programs they
+> will have a glViewport command. And essentially once you're in the
+> unit cube you still have to get to the appropriate location in your
+> screen and position the window appropriately on your monitor. And
+> that's what these two things deal with. As far as this lecture has
+> been concerned, the past two lectures have dealt with the model
+> transformation and the camera transformation. This lecture has dealt
+> with perspective. And all of these come together in the viewing
+> pipeline.
+
+---
+
+#### Unit 1   Homework 1   HW1: Introduction
+
+# HW1: Introduction
+
+### Homework 1: Transformations
+
+#### Introduction
 
