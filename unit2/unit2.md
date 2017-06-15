@@ -332,3 +332,211 @@ https://youtu.be/PTU05lo1M9o
 
 # L6V4: OPENGL 1: DRAWING
 
+> Finally we can talk about how do we actually draw anything of
+> interest. So far we've set up buffers, we've set up windows, but we
+> don't have any geometry to actually appear on the screen. This is what
+> we are going to discuss in the current segment. OpenGL provides a
+> large number of primitives, points, lines, polygons, triangles, quads,
+> quad strips, triangle strips, triangle fans. The strips and fans are
+> just more efficient ways of specifying primitives if you have multiple
+> triangles that share vertices, you can describe them with fewer
+> parameters. So in a triangle strip you have these 3, these 3 vertices
+> defining a triangle, the next triangle shares two of the vertices, and
+> so you need to define only one new vertex for it. So essentially you
+> have one new vertex per triangle. In the triangle fan there's a
+> central location and then you define the vertices around it. So, you
+> can define points with GL_POINTS, we'll just talk about glBegin,
+> glEnd, newer ways of specifying geometry. It's stored in homogeneous
+> coordinates; you can define line segments using GL_LINES. Polygons,
+> the one assumption is that these are planar convex polygons, and
+> simple also. Even concave polygons are a bit hard. For more complex
+> shapes, I would suggest you tessellate and use GLU, has some
+> utilities. We've already talked about strips, loops, triangles, fans,
+> quads, and ways in which of handling them. GLUT introduces a few
+> additional primitives. And in fact, we've used the GLUT primitives in
+> homework 2, so that you don't have to bother too much about
+> instantiating geometry and you can focus on the lighting and shading,
+> which is what homework 2 is about. So the GLUT 3D primitives are a
+> cube, sphere and teapot. And indeed, these are the primitives that you
+> will be using in homework 2. OpenGL drawing has gone through an
+> evolution. I'll talk first about the old OpenGL way of drawing, which
+> many students actually feel is easier to understand and easier to use.
+> And then I'll talk about the modern way in which OpenGL drawing is
+> done using vertex buffer objects. Note that both methods are currently
+> supported. It remains backward compatible. However, they do encourage
+> the new method, but it's not required. In old OpenGL, you have the
+> client-server model. The client encloses a list of vertices between a
+> glBegin and glEnd pair. Moreover, we can include normal C code, so for
+> example if you want to compute the vertices on a circle, you can use
+> sines and cosines. Inside are commands like glVertex3f and glColor3f.
+> What is the 3f for? It's really because OpenGL is C-based, remember it
+> dates back to '92. It doesn't include function overloading. So 3f
+> means floating point arguments, 3 of them are input. If it were 3i, it
+> will be 3 integer arguments and it defines different functions for
+> each of these. One thing that people often get confused with is they
+> say, "I define a vertex, I define color, vertex color". Let my just
+> write this down. So I can say glVertex, and then I can define glColor
+> after that. This is a common mistake, you should not do it in this
+> order. So what you think is, I'll define the geometry and then I'll
+> define the color and this color should be associated with this vertex.
+> In fact, per OpenGL conventions, this is wrong, and what you should
+> really do is define the color before you define the vertex. The reason
+> for that is that old style OpenGL is really a state machine.
+> Therefore, what needs to happen is that it reads the current state,
+> and you need to set the state before you call the glVertex command.
+> It's really an assembly line. You pass the vertices. OpenGL takes
+> them, transforms them, shades them. And all of the processing is
+> currently what you can program in the vertex and fragment shaders on
+> the GPU. This is immediate mode, where the data you put out is
+> immediately handled by OpenGL. The retained mode is where it's
+> retained so it can be reused and optimized. In fact the modern OpenGL,
+> the vertex buffer objects, is essentially trying to develop fast,
+> efficient retained mode algorithm. Continuing on with old OpenGL, this
+> is what drawing in display would be like if you wanted to draw a
+> polygon. And, in fact, this is essentially the code that I used before
+> I switched to more modern OpenGL to draw the plane that I've just been
+> showing you in the demos. So what we say is display, clear the color
+> buffer bit, and then I define the color. So I define the color red,
+> and I put it at (0.5, 0.5). Incidentally, this is a useful debugging
+> trick. If you just draw a plane, you may not know which vertex in your
+> code is where in your screen. But if you give them each colors, it's
+> very obvious, and OpenGL will interpolate the colors. And so this is a
+> nice way of labeling the vertices in the scene that you are drawing.
+> So this is (.5, .5), is red. Then you can go to the next one, which
+> has color green and is (-.5, .5), and you go through so you have color
+> blue (-.5, -.5) color white. Note that glColor always comes before the
+> glVertex. Then glEnd means that within that block you are specifying
+> the geometry, and flush is just a synchronization command to send the
+> commands to the server, flush the queue. So all old style OpenGL
+> operates on this client-server model even though in practice the
+> client and server are almost always on the same computer. And so
+> glFlush forces the client to send what could be a network packet, but
+> it's usually just an internal synchronization. glFinish waits for the
+> ACK and should be used sparingly. That's all that I have to say about
+> drawing in old style OpenGL. You can specify the type of object that
+> you're drawing. GL_POLYGON, GL_TRIANGLES, and so on. New OpenGL
+> defines these new concepts known as vertex buffer objects that are
+> more elegant and more efficient. We have included examples of them in
+> the demo code we provide. At that same time, I do want to say that
+> they are more complicated. If you're writing your first OpenGL
+> programs, you may want to start with old style OpenGL. So here is the
+> floor specification. I have just defined a number of arrays which
+> contain various types of information. So here is the floor vertices,
+> so I have 4 vertices, each of which includes 3 coordinates. These are
+> in inhomogeneous coordinates. I have floor color for each of the three
+> vertices. And again red, green, blue, white. Then I have the floor
+> indices, so I want to consider 0, 1, 2, and 3, which is just one
+> polygon. And then I have the floor vertices, which is a definition of
+> the second object. So that's why I have called it floorverts2. So
+> remember that I actually do have 2 planes, although we will be
+> focusing on the first one. And similarly I have defined floor color 2
+> and floor indices 2. So here is what I do to setup the vertex buffer
+> objects. The number of objects is 2 in this case. The number of
+> buffers per object is 3, so vertices colors and indices. Indices is
+> just a pointer to the vertex. Instead of saying, draw from vertex 1 1
+> 1 to 2 2 2 to 3 3 3, I just define the vertices first and then I say
+> connect vertex 0 to vertex 1 to vertex 2 to make a triangle. It's a
+> very standard way of doing things. So the buffers per object, list of
+> buffers for the geometric data, and then you have objects, and so
+> defining a number of different arrays, primitive type is the type of
+> primitive, quads, polygons, and the number of elements is the number
+> of geometric elements, whether they're triangles, quads, etc. Now we
+> also have this buffer offset macro and this is discussed in the OpenGL
+> red book. It ensures that we can offset certain number of bytes. We
+> don't have to worry about it. Similarly we have the number of array
+> macro, again, taken from the red book, which is just how many numbers
+> does this array have. I've defined vertices, colors, elements to
+> define the 3 arrays. And FLOOR and FLOOR2 for the objects on the
+> scene. Here is my actual program, and I will go over it in detail.
+> First I define my offset, as object times numperobj. And that's just
+> because different objects are stored differently and multiplying these
+> together ensures I get the correct buffer number. Thereafter, I have
+> to bind the buffer. So, this is an array buffer and I have to bind it
+> with the appropriate buffer. So, in this case it's vertices. So, let
+> me just consider that. And so, here I'm talking about vertices. Then I
+> have to define the data in the buffer, which is, size of the number of
+> vertices and vertex. And GL_STATIC_DRAW is just a command which tells
+> the system how to optimize things. Alright. So then I define a
+> glVertexPointer into the buffer. And this is 3 variables. They're of
+> floating point type. And I have my buffer offset into the buffer. And
+> then I enabled the client state of the GL_VERTEX_ARRAY that enables it
+> to be drawn. Okay. Then the second thing is, I bind the buffer with
+> the colors, go through the same kind of analysis. Define the color
+> pointer, enable the client state. The final step is, perhaps,
+> interesting. So I define the GL_ELEMENT_ARRAY_BUFFER. So now that's
+> not an array, it's an array of elements. So that's the indices, like
+> 0, 1, 2, 3 and again defining it appropriately. I set the primitive
+> type of the object to the type, so that's triangles/quads, and the
+> number of elements on the object to the number of indices or the
+> number of faces. And this is the command to initialize the buffers. Of
+> course, this is, I realize, fairly complicated, and it's just the
+> standard syntax that's used in OpenGL, and I've given you an example
+> of the code so that you can build off it. Having defined the buffers,
+> we also need to draw the vertex object. And once we define the data in
+> the buffers, the code is actually very similar. I bind the buffer
+> appropriately, and then I, and essentially that's what I need to do.
+> So the only difference from the code you saw previously, is that I
+> don't specify the buffer data, that's already available to me. And so
+> you see colors, I am binding the buffer for the elements. Now what do
+> I do inside the void display, I call drawobject for FLOOR and FLOOR2
+> and notice this final command, it actually does the drawing, so it's
+> glDrawElements. It takes the primitive type for the objects where they
+> are triangles/quads, the number of elements and it goes to the
+> appropriate buffer. So the buffer has been bound to the elements. All
+> of this is essentially just standard syntax in OpenGL for drawing. It
+> may be a bit confusing to understand but we've given you the sequence
+> of commands so that you can build on it. Let's talk about
+> initialization for drawing and shading. So I've defined a vertex
+> shader, a fragment shader and a shader program. And these are
+> important to the initialization. So what I first do is call this
+> glGenBuffers command. And it generates a number of buffers equal to
+> number per object times the number of objects. I initialize the
+> objects for FLOOR and FLOOR2. And then I call the vertex shader, the
+> fragment shader and the shader program. We'll be talking a little more
+> about the different steps and setting up in OpenGL shader later. But
+> for now, this initshaders just returns a numbers for the vertex and
+> fragment shader. And the shader program essentially links them
+> together. So it takes the vertex and fragment shader and makes a
+> shader program. Notice that I have here file names. So let me just
+> draw this, fragment shader and vertex shader. So the fragment and
+> vertex shaders live in files that are the specific locations, and in
+> fact they are compiled on the fly. So you don't need to recompile your
+> program if you change the vertex or fragment shaders. Having shown you
+> all of this code, it might be more instructive that I actually do a
+> demo of changing colors. It's actually very easy, so let me bring in
+> my text window where I have the code. And here I have the floor color,
+> so this is red, green, blue and white. What I am going to do now is
+> that I will comment this region out. So let me copy it. I am just
+> showing you all the steps involved just so you get a sense that this
+> is a real code that I'm going to write here. So I will go ahead and
+> comment out the earlier line. And now I'm going to change the color.
+> So, for example, I could make this all white. So let's make it all
+> white. And if I do this I should get a completely white floor. The
+> final one is already white, so let me save this file. And you may have
+> a number of different compilation environments, but I'm running this
+> on a Mac and you can, I'm just using make. So it runs the make file
+> and notice that there are a few different definitions,
+> GL_GEXT_PROTOTYPES, OSX and all of these things are of course
+> specified for you in your makefile, you already have the compilation
+> environment set up. So now I can run the program mytest1. And let me
+> bring it in here. Notice that the plane on top is still the same, so
+> that hasn't changed but the plane on the bottom is now white instead
+> of being multicolored. They still have the same interactions like in
+> zoom in and zoom out. I can press escape to quit since I have that in
+> my keyboard routine. And if I now change back to the colors, it would
+> go back to being multicolored. So let me just comment this out and
+> I'll change it again. Not necessarily a very exciting demo but it is a
+> first step showing that you can write these types of programs. Now you
+> can see that it is in fact multicolored, the plane, because it has 4
+> different colors and they are interpolated.
+
+---
+
+#### Unit 2   Lecture 6: OpenGL 1   L6V5: OPENGL 1: INITIALIZING SHADERS
+
+# L6V5: OPENGL 1: INITIALIZING SHADERS
+
+### L6V5: OpenGL 1: Initializing Shaders
+
+
+
