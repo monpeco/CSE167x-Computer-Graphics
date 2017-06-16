@@ -538,5 +538,303 @@ https://youtu.be/PTU05lo1M9o
 
 ### L6V5: OpenGL 1: Initializing Shaders
 
+https://youtu.be/R8aUykcxYjA
+
+> The final segment in this initial sequence on OpenGL deals with
+> initializing the shader. Let's go back to the OpenGL rendering
+> pipeline. As you can see, there are vertices and images that both go
+> through the OpenGL pipeline. Vertices are transformed by a vertex
+> shader. Then you do scan conversion, generate fragments, that's where
+> the geometry intersects each pixel, is called a fragment rather than a
+> pixel because multiple geometric objects could intersect the pixel.
+> You might have multiple fragments for a pixel because of things like
+> antialiasing. Those fragments are processed by the fragment shader.
+> This lecture is about how you set up the bare bones, no-op fragment
+> and vortex shaders and hook them into OpenGL. So the simplified OpenGL
+> pipeline, user specified vertices, vertex buffer object. For each
+> vertex in parallel, OpenGL calls the user specified vertex shader,
+> which transforms the vertex. In the simplest case, just does model
+> view and projection matrices. For each primitive, OpenGL then
+> rasterizes these transformed vertices and it generates at least one
+> fragment for each pixel the corresponding vertex covers. For each
+> fragment in parallel, the OpenGL calls the user specified fragment
+> shader, which then goes through shading and lighting calculations.
+> OpenGL, by default, handles the Z-buffer test by itself, but you can
+> override it. The shader setup consists of a number of individual
+> steps. So we'll discuss the shader itself later. First you have to
+> create the shader, vertex and fragment shaders. Then you have to
+> compile the shaders, you have to attach the shaders to a program. You
+> have to link the program, and you have to use the program. And you
+> have to do each of these steps. So what is a shader? It's just a
+> source which is a sequence of strings. As far as the C program goes,
+> it's a sequence of strings. And then, you just compile these strings
+> just as you would compile a normal program. Here is the shader
+> initialization code. This is my initshaders code. GLenum type is
+> vertex or fragment and the file name. And this code is largely derived
+> from what is recommended in the OpenGL book. So look at the different
+> steps. So first you create a shader of the given type. Then you read
+> the text file. That's my own command for reading the text file where
+> the shader is stored. The shader, remember, as far as the program is
+> concerned, is only a sequence of strings. But I've stored it in a text
+> file. Okay, so you set up a new array, which is the size of the
+> string, and let's ignore this. This is just to get a constant
+> character so you don't complain. And it copies it in here. So then you
+> define the shader's source for the given shader. It has only one
+> string. You give the string, and this remaining parameter you don't
+> need to use. You then compile the shader. And here is something
+> interesting. From OpenGL, you can get a number of status flags. So,
+> this is the status flag which tells you what the compile status is. If
+> the compile status has an error, I call this function to describe the
+> shader errors. And this is C++, you throw an exception. If the compile
+> thing doesn't have errors, I return the number of the shader which I
+> get from OpenGL. Next step is to link the shader program, and so here
+> I have given the vertex shader and I have given the fragment shader. I
+> create the program, I attach them to the program and then I link the
+> program. Again, I get the link status, and if it's linked, I use the
+> program. If it's not linked, I have to throw an exception and print
+> out errors. Finally we come to what a basic shader will be, and this
+> is in your directory, it's in the shaders directory, it's called nop
+> because it really doesn't do much. It's almost no-op shader. Of course
+> it will make it more complicated in subsequent lectures. And we have
+> done it for vertex and fragment. It is written if GL shading language
+> known as GLSL, which much like OpenGL itself provides a unified API in
+> which to write shaders, which will later be compiled of course
+> internally onto the graphics card. We have both a vertex shader and
+> fragment shader and they communicate because the outputs of the vertex
+> shader often inputs to the fragment shader. So, in fact, the outputs
+> in vertex shader and vertices are interpolated and rasterized and
+> given to the fragment shader. Version is the version of the GLSL that
+> is used. I think it's currently up to 300 or 400, but I just want to
+> be completely backward compatible, so I am using 120. There's also
+> the, the language has been changing and so this command varying is
+> technically correct in 120 and some cases I've used attribute, and
+> that doesn't work on the Mac. So, just follow the skeleton code that
+> you are given to know the correct command to use. In and out is
+> something that they recommend more modernly, but in either way, the
+> skeletons that we provide should work, and should have the right
+> command. The important thing is that this says that this vec4 color is
+> an output variable from the shader, which will then go into the
+> fragment shader. So the main command, just like in C, it's pretty much
+> code as written like in C, but you have a lot of interesting things
+> you can do also. Like you can swizzle. You can have half vectors and,
+> there's a lot of information that's provided if you look up the GLSL.
+> So gl_Position is equal to projection matrix. So gl_Position is a
+> special thing that says where the position is. Projection matrix times
+> model view matrix times the vertex. And this is just the standard
+> projection times model view. And the color is, again, the special
+> variable GL color, which is the input color. But I have explicitly
+> used this to pass it to the fragment shader, and show you how that's
+> done. Here is my fragment shader. Again, this attribute you should
+> probably replace with varying on the Mac. And our skeletons are
+> correct. In other cases, you might want to use in and out. Essentially
+> it is a no-op, where it just says, GL fragment color, again a specific
+> thing which is what is the color of the fragment, is just equal to
+> color. So it's just showing you the basics of how you pass an argument
+> from the vertex shader to the fragment shader.
+
+
+---
+
+
+#### Unit 2   Lecture 7: OpenGL Shading   L7V1: OPENGL SHADING: MOTIVATION
+
+# L7V1: OPENGL SHADING: MOTIVATION
+
+### L7V1: OpenGL Shading: Motivation
+
+https://youtu.be/vAn2auo1LeQ
+
+
+> In this lecture we are going to study shading in OpenGL which is
+> critical in order to do homework 2 and gets you excited about the way
+> in which you can actually light and shade objects in a scene. In
+> particular this lecture deals with lighting and will briefly explain
+> the shaders that we used for the mytest3 program that you compiled for
+> homework 0. We'll do this before explaining the full code base for
+> mytest3, so that you have all of the material you need to get started
+> on homework 2. Furthermore, we will explain all of this with reference
+> to the source code; there is of course an interesting question about
+> how to in a correct and physically based way, how do you do shading.
+> We will not get into that in this lecture. It's an interesting topic
+> that we hope to cover in a future course. As far as this lecture is
+> concerned it will deal with the nuts and bolts of how do you create a
+> nice smooth shaded scene. I'm showing you the demo for homework 2
+> here. This is the solution. The idea is that you read a text file that
+> specifies all of the geometry here. And then your program will display
+> the scene with the correct shading. Notice that I still have the same
+> functionality I had in homework 1. Which is that I can move about the
+> scene. And the shading, you notice the highlight here that changes as
+> I move the scene to different locations. Notice that you have
+> highlights, both you have the red and the blue highlight on the
+> teapot. You have highlights on the spheres. This lecture and homework
+> 2 will tell you how to basically create a nice scene, like what we
+> just saw. Let me also go back to the demo for mytest3 and as I bring
+> up the demo in a moment pay attention to these different aspects.
+> You'll notice that the teapot has lighting on it. It has the red and
+> blue highlights that you can see. Also notice that you have diffuse
+> shadings. So where you don't see the red and blue highlights the
+> teapot is still lit and it's still shaded. You'll notice that the
+> floor has this wood texture in it. And you'll further notice that all
+> of the shading is not pasted onto the object. It actually updates as
+> you move around. So here is my scene, and I can get the teapot to
+> animate. So, in this case, the teapot is animating somewhat slowly, so
+> you can see the motion. And here you notice that you have the blue and
+> the red highlights, and as the teapot is moving those highlights are
+> changing slowly; their locations are changing. You notice the texture
+> on the wooden floor, and you also notice that where you don't have
+> highlights on the teapot, you have this general diffuse shading. Why
+> do we care about lighting? In the previous lecture on OpenGL, we just
+> set up a basic scene with 2 quads. Of course you won't be very happy
+> with that if you just have a quad in the scene. And lighting is
+> important as shown here. So if you look at the sphere on the left,
+> you'll see that it's rendered with flat shading, and there you can see
+> the polygonal facets. But, it still looks somewhat interesting because
+> you have that highlight on this sphere. If we were to just paint it in
+> a constant color it would look like a flat disc made of paint and
+> indeed the image on the screen is just a circle. So it's not any
+> different from a disc. So in fact, by putting in the shading, the
+> diffuse shading, also the highlights, it really gives the appearance
+> of shape perception. If you've taken a computer vision course, one of
+> the key cues by which we perceive shape is shading. And in fact
+> there's a rich area in computer vision known as shape from shading. So
+> this accurate lighting and shading is really important to convey the
+> shape of the object. Furthermore, it then looks like an image that you
+> can imagine in the real world. The way shading is done is also
+> important. In flat shading, the entire face has a single color from 1
+> vertex. And so you can think about this as being a flat plane, that
+> just gets lit by the color at the left-most vertex, for example. Also,
+> if you have a surface normal, that normal is assumed to be the same
+> across the face. And for this reason, you do see the polygon or
+> faceted appearance on the left. Whereas on the right, you are actually
+> using the same geometry, but in fact you, it enables smooth shading.
+> So this is something that was invented by Henri Gouraud, at the
+> University of Utah. And what he does is a simple interpolation of
+> shading across the vertices. Furthermore, you can interpolate the
+> normal across the vertices to get specular shading to work out. We'll
+> study all of these in subsequent segments. Before we go further, all
+> of you are used to looking at color images. And so we have to say
+> something about color. Now color is a fascinating topic and it's
+> something we could spend an entire course on. But here I'm going to
+> give you a very brief one slide primer on color. As humans, we are
+> largely sensitive to these three primary colors: red, green and blue.
+> Of course in practice we have a range of sensitivities across the
+> visible spectrum but, we have standardized in computer displays for
+> these three primary colors and one of the common illustrations you see
+> in books is a color cube where you place red, green and blue at the
+> vertices of the cube and then you can combine colors in various ways,
+> and this can be drawn in fact as a Venn diagram. So let me draw this
+> here, so you can imagine that this is equal to red, and then you have
+> the green color here, and I draw the blue color here. Okay? So this
+> area, where red and green meet, this area here, is what will be
+> yellow. Whereas this area, where red and blue meet here will be
+> magenta, and where green and blue meet here will be what's known as
+> cyan. And then the interesting thing is what happens when all of them
+> combine here, and that is white. So red plus green plus blue is equal
+> to white. The intersections of red and green is yellow, blue and green
+> is cyan, blue and red is magenta. These are known as the secondary
+> colors. And red plus green plus blue is equal to white. For some of
+> you who've been interested in paints, or even like what you get on a
+> printer, these relations may seem a bit strange. That's because on a
+> computer display you do colors in an additive fashion. So you add
+> colors. So that means when you say red plus green you are adding red
+> and green color. Whereas in paints or even in printers it's actually
+> subtractive model where you have a certain base color and by then
+> adding another color you actually do a subtraction and those color
+> spaces are different. Now, each color channel, red green and blue is
+> treated separately. That is the common assumption. Of course, in
+> reality you want a full spectral color distribution. Within computer
+> graphics or digital computers we just deal with 3 primaries. In
+> OpenGL, one very often uses an RGBA mode, where RGB is fairly clear,
+> and you typically use 8 bits per color channel. "A" stands for alpha
+> or transparency. We won't get into it much here, but you can imagine
+> that you want to blend one object or the other. So totally, this
+> corresponds to 32 bits or 4 bytes, and in the frame buffer you will
+> typically need 4 bytes for each pixel in the frame buffer. In OpenGL,
+> colors are normalized from the range from 0 to 1. But of course, if
+> you representing them with 8 bits, they have to range from 0 to 255 in
+> terms of pixel intensities. And if you look at the image and you
+> inspect it in some kind of program, typically you'll get a value from
+> 0 to 255. But OpenGL tries to abstract that for the most part,
+> considering colors normalized from 0 to 1. They do clamp to that
+> range, so if you get a color greater than 1, it will clamp to 1, and
+> if you get the color less than 0 it will clamp to 0, and only in the
+> final stage are those appropriately quantized and displayed in the
+> image. Let me give you a brief outline of what the rest of this
+> lecture is about. First we'll talk about Gouraud and Phong shading. In
+> the context of homework 2 or in the context of the OpenGL pipeline,
+> those largely correspond to vertex of fragment shading. And then we'll
+> talk about the types of lighting materials and shading. So we'll talk
+> about point and directional light sources. We'll talk about ambient,
+> diffuse, emissive and specular shading. We'll describe the fragment
+> shader that was used in mytest3. And you will need a somewhat
+> generalized version of this for homework 2, and we'll discuss the
+> source code in the display routine. Let me first say a few words about
+> vertex versus fragment shaders. You can use either of these for
+> lighting and they really correspond to what you think about. The
+> vertex shader operates on vertices and the colors from that are
+> interpolated across the pixels or across the fragments. On the other
+> hand, the fragment shader receives some variables from the vertex
+> shader. So, you may for example have normals at the vertex shader that
+> are interpolated and passed to the fragment shader. And the fragment
+> shader then at each fragment or each pixel does the lighting
+> computation. In traditional OpenGL, before the advent of shaders, all
+> of lighting was handled on a per-vertex basis. So essentially using a
+> fixed vertex shader, because it's cheaper. If you have fewer vertices
+> than fragments then typically you want to design your scenes so you
+> have a polygon occupy several pixels. Then it is just cheaper to
+> compute the expensive lighting computation of the vertices and then
+> use the rasterization hardware to interpolate it. So that is the basic
+> idea of Gouraud or smooth shading, and we saw an example in mytest1 in
+> the previous lecture. Flat shading is of course even simpler, where
+> one just uses the color at a single vertex and does no interpolation
+> at all, and that leads to the faceted appearance we saw earlier.
+> However, in today's hardware first it's a lot cheaper to write
+> fragment shaders. The performance penalty is not that large. And
+> second, many times the geometry is significantly dense that the number
+> of vertices is proportional to the number of pixels. And this allows
+> us to do more interesting lighting calculations. So for example,
+> highlights very often don't really work well with a vertex shader. You
+> need to tessellate or add enough triangles to your scene so that you
+> actually can represent fine highlights. But they're easy to do in
+> pixel shaders or fragment shaders. So, today, it's very often just
+> more convenient to write the lighting calculation in a fragment
+> shader. That's what's done in mytest3, that's what you should do in
+> homework 2. In this case, what you will end up doing is that you will
+> get the normals at the vertices. Maybe other information, but the most
+> useful thing is the normals. You will interpolate to get a normal at
+> the particular pixel, and then you will shade it using the shading
+> formula. This is a technique that is known as Phong shading. I will
+> just highlight that. And it's named for Bui Tuong Phong who again
+> invented this in the University of Utah, where a lot of the early work
+> in graphics is done. The idea, let me just briefly describe it. You
+> have a curved surface like this and you have a vertex here and you
+> have a vertex here. You have a normal here and you have a normal here.
+> You interpolate these and you get a normal here. And this is what the
+> normal you use for shading. On the other hand, if you had a highlight
+> here it would show up properly. On the other hand if you just
+> interpolated the shading of the vertices you may say there's no
+> highlight here. There's no highlight here. So there's no highlight
+> here. Phong shading is different from Phong illumination. Phong
+> illumination is the formula that goes in the fragment shader in order
+> to produce highlights. Phong shading is an approach whereby you
+> interpolate normals, and then you apply the formula to the normals. So
+> it's possible to use Phong shading with a different illumination model
+> such as the Torrance-Sparrow which is one of the BRDF or the
+> reflection models. There are others; we'll talk about the Blinn-Phong
+> model. But, it was originally proposed by Phong so that he could
+> combine the Phong illumination model, but in order to get highlights,
+> you also needed Phong shading, and of course it's more accurate. We'll
+> talk about both of these later, in later segments, and we'll discuss
+> the whole range of shading options that one typically uses in OpenGL.
+
+
+---
+
+#### Unit 2   Lecture 7: OpenGL Shading   L7V2: OPENGL SHADING: GOURAUD AND PHONG
+
+# L7V2: OPENGL SHADING: GOURAUD AND PHONG
+
+### L7V2: OpenGL Shading: Gouraud and Phong
+
 
 
