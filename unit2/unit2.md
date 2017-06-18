@@ -1562,3 +1562,158 @@ https://youtu.be/vAn2auo1LeQ
 > way you can shape the way in which the highlights look. In the next
 > segment, we'll be talking about the fragment shaders, and ways in
 > which you will actually implement this in OpenGL.
+
+---
+
+#### Unit 2   Lecture 7: OpenGL Shading   L7V4: OPENGL SHADING: FRAGMENT SHADER
+
+# L7V4: OPENGL SHADING: FRAGMENT SHADER
+
+> We are now going to talk about the actual fragment shader that is used
+> to implement the OpenGL shading computations. This corresponds to the
+> fragment shader from mytest3 which is the program you compiled for
+> homework 0. This needs to be adapted and generalized in order for you
+> to do homework 2. Here is the set up in the fragment shader, we've
+> already talked about the vertex shader, which simply passes in the
+> color, the normal and the vertex. So here are the inputs. It's taking
+> in color, normal and vertex. And again this variable will depend on
+> your specific system and take it from the skeleton code whether it's
+> attribute or something else. Here I'm defining a sampler2D, which is
+> for texture. The keyword uniform means that it doesn't change over the
+> different fragments. So it really remains the same over the whole
+> image. istex is just an integer 0 or 1 saying do I texture or not?
+> islight is, again, are we lighting or not? So this is the basic global
+> variables. Let's talk about the shader variables and here we are
+> assuming that light 0 is directional, light 1 is a point light. Of
+> course, your program needs to handle more general cases in homework 2.
+> And the actual light values are passed from the main OpenGL program.
+> So you have light 0 direction because light 0 is a directional light
+> so it's vec3, and again, note that these are characteristics of the
+> GLSL shading language; I'm showing you actual GLSL code. So this is a
+> uniform. Again, because it's the same across all the fragments. vec3,
+> light 0 direction. Light color is a 4-vector, RGBA. Light 1 position
+> is a 4 vector, because it's a positional light in homogeneous
+> coordinates. Light 1 color is again the color. Now set the material
+> parameters. These could be varying on a per-vertex, per-fragment
+> basis. But we won't get into that here. We'll just make them uniform.
+> So ambient, diffuse, specular. And these are vec4s again because
+> they're colors. And shininess is just a floating point value. It's a
+> single number. Here is my program to compute the lighting so it takes
+> in a large number of arguments, so constant vec3 direction, it means
+> it's a constant just as in standard C++, it's the direction, the light
+> color, the normal. The halfway vector, the diffuse component, the
+> specular component and the shininess. And in fact, this means some
+> version of this you will be using in homework 2 so do look at it
+> carefully. I compute the dot product of the normal and the lighting
+> which is dot product of normal and direction. Of course I haven't told
+> you how to specify the direction, et cetera, yet, and that will be
+> coming later. I say the Lambertian is equal to the diffuse complement,
+> times the light color, times the N dot L, 0. So, the diffuse
+> complement N dot L, and then using the light color. Half-angle is N
+> dot H is dot product of the normal, and the half-vector, and the Phong
+> is my specular terms like color terms power of N dot H to my
+> shininess. And what I return is Lambert plus Phong. So here are the
+> main transformations in the fragment shader. So if istex is greater
+> than 0, then the fragment color is the result of texturing. So in that
+> case we ignore the lighting. You could of course store this value and
+> modulate the lighting computation as well. If islight is 0, then again
+> you return. So we're interested in what happens at this else. Note
+> that the eye in OpenGL is always at the origin looking down the -Z
+> axis, so that's its standard convention. Therefore we set the eyepos
+> to the origin, and then my poles is modelview matrix times myvertex.
+> So this gives me the vertex location in eye coordinates. So I am
+> applying the modelview matrix to the vertex, and then I am
+> dehomogenizing it here, so I am going through the whole pipeline of
+> getting my coordinates and eye coordinates and dehomogenizing it. So I
+> actually have a 3D location. Then I find the direction to the eye,
+> which is simply the eye direction minus mypos. So, the vector from my
+> location to the eye, normalized. Now I come to normal. And again, I
+> put in comments that you can actually do this gl_NormalMatrix, but I
+> want to show you something a bit more complicated. Remember that the
+> normal transform is, you take the modelview matrix, and you take the
+> inverse transpose. A normal matrix is always the inverse transpose.
+> And that is nicely specified to you here in the normal matrix, but I
+> want to do a little bit more. So, I say modelview inverse transpose,
+> okay? Times, this quantity, vec4, is just creating a 4-vector. So it
+> takes the normal and it adds a w coordinate of zero. And after I've
+> done that, I take only the xyz values. So, I am really interested only
+> in the xyz values or really the multiplication of the upper 3x3. And
+> the reason I need to do that is, inverse transpose of course, inverse
+> transposes the whole 4x4, but I'm only interested in the upper 3x3,
+> and the xyz coordinates for the normal. A normal matrix does that part
+> automatically. And then finally, I just re-normalize the normal. So,
+> coming back to the fragment shader, how do we handle the directional
+> light and the point light? So the directional light you normalize the
+> light direction. The half vector you add up the direction, the eye
+> direction, and you normalize it and then compute the light. For the
+> point light, you de-homogenize the location of the light, and then you
+> again compute the direction for the light. Again notice that there is
+> no attenuation, compute the half vector and you call the color. So
+> study this code carefully. Your homework 2 code will very likely be
+> based on it, but is slightly more general. So just again to recap the
+> outline here, we talked about Gouraud and Phong shading. We talked
+> about the types of lighting, the ambient, diffuse, emissive, specular.
+> We've talked about the fragment shader. And the final thing we need to
+> talk about is what is the source code in the main OpenGL program in
+> the display routine. Okay? And here so we have a bunch of things to
+> set up the lighting. So here is just definitions, right? So this is
+> one defining a lot of things. This was the shininess which we just
+> tried changing. And I've just defined lights, specular direction,
+> position. So, one of the things I do is to transform the lights by the
+> modelview matrix. So lights are just like geometry, and they have to
+> transform by the modelview matrix. But this is difficult to do inside
+> the shader, because the lights are transformed by the modelview matrix
+> at the time you hit the light command. Whereas within the shader, the
+> modelview matrix could be different for different vertices and
+> fragments. So, I'm doing these transformations manually. And
+> transformvec is just a 4X4 matrix multiplier. So again, I'm just
+> reminding you how the light transforms like other geometry. Only the
+> modelview matrix, because you're not projecting lights down; they
+> operate in 3D space. And you can have various different interesting
+> things you can do to the types, to the light. So you can set the
+> transforms to identity before specifying the light. So it's
+> stationary. You can move the light in the standard way. Push the
+> matrix, position the light. I mean, move the light, pop the matrix.
+> You can move the light source with the viewpoint which is like, light
+> attached to a miner's hat. And it's very useful because it ensures
+> that every object you see actually has light falling on it, so you
+> don't get a black screen anywhere. So you can simply set the light to
+> 000 because that's where the OpenGL origin is. And make the modelview
+> matrix the identity before doing this. So here is my transform vector,
+> and essentially it's just a matrix multiplier taking into account the
+> fact that OpenGL stores matrices and column-major order. And you can
+> in fact do this more simply with a simple matrix multiplier in GLM if
+> you handle the conventions properly. Okay. So now we've come to
+> setting up the lighting for the teapot. And here we see this command,
+> glUniform3fv. So that means you set a uniform variable in the fragment
+> shader or the vertex shader. 3fv means three floatings and v. So
+> essentially what you're doing is you're saying light-zero direction.
+> You are setting it. There's a vector of one element because it's just
+> a single value and you're setting it to light0. So light0color again,
+> and again 4fv. So is it a 3 vector direction, is a 4 vector, uh, so
+> 4fv light position, 1 position, light 1 color. And then you set the
+> ambient, you set the diffuse, you set the specular, you set the
+> shininess and now I mean I set this demo command so that I can flip
+> through by increasing the demo and show you various examples. We'll do
+> that in the next lecture but essentially again uniform1i means it's a
+> single integer and I set it to 1 or 0 depending on this lighting
+> value. And I will enable and disable lighting along the teapot to
+> ensure that only the teapot gets the shader. Okay, so, in the
+> initialization also I need to write some code. So I do the standard
+> initialize shaders for the vertex and fragment shaders, set up the
+> shader program. And then these are a sequence of things which set up
+> the parameter mapping. See, I want to know, where is this islight
+> command in the shader? The islight variable. What variable number
+> should it be attached to? And so this is the idiom that gets you that.
+> You glGetUniformLocation. In the shaderprogram, islight. And I'm just
+> setting it to the same variable so that I can use these variables
+> later. In summary, in this lecture we've talked about lighting and
+> shading. And in this final segment, I've shown you the basics of a
+> fragment shader and fragment program. Of course, if you want to get
+> more familiar with GLSL there are many materials and tutorials
+> available online, and I would recommend that you look over them.
+> However, the code we provided is self-contained in itself and gives
+> you the basic syntax of OpenGL and GLSL and simply by generalizing and
+> modifying the shader code we provided with mytest3, it should be
+> possible to write the appropriate shaders for homework 2.
+
