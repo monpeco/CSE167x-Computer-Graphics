@@ -1717,3 +1717,226 @@ https://youtu.be/vAn2auo1LeQ
 > modifying the shader code we provided with mytest3, it should be
 > possible to write the appropriate shaders for homework 2.
 
+---
+
+
+#### Unit 2   Lecture 8: OpenGL 2   L8V1: OPENGL 2: GEOMETRY
+
+# L8V1: OPENGL 2: GEOMETRY
+
+> In this lecture, we're going to talk more about OpenGL. We're going to
+> look at the demo we had a couple of lectures back with the simple
+> plane. And we're going to gradually make it more complicated. We'll
+> start with the simple mytest1 program that I showed in OpenGL 1, which
+> just drew a plane. And through a sequence of steps, each of which will
+> show a demo, we will make it gradually more complicated. Let me show
+> you first the program. So here you see now that I have not just my
+> plane. But I also have the 4 pillars with different colors and I have
+> my teapot which is animated over the scene. Let's first review the
+> last demo and then we'll add more functionality. As I said earlier,
+> we're actually going to be able to compile and run these programs. So
+> here is the source code for the program. And I've introduced this nice
+> DEMO flag so that I don't have to write code. And so if I just set it
+> to zero, it will reduce back to the previous assignment. I can even
+> compile this. And again, I mean, you see that it's a fairly standard
+> compilation, it just has the few additional flags. And now I can
+> actually run this. Note that the text here is just reading off the
+> fragment shader, so that I can see what it is. And now I have the
+> simple plane I can move around, and it's just the first demo. Okay. So
+> let's get rid of these compilation and source code windows, so we can
+> look again at the slide. And if you download and play with the
+> program, which I highly encourage you to do, then you can set the DEMO
+> variable as equal to 4 for all of the features, or you can step up
+> slowly, and you can see the different features. Notice that I've
+> included GLUT, I've included shaders and geometry. And I defined as
+> before mouseoldx, mouseoldy, eye location. The new definition is the
+> teapot location, which is where the teapot is located. I also include
+> a flag to say whether we are actually animating or not, and then
+> vertex, fragment shaders and the shader programs, and then the DEMO
+> variable to see what parts you want to actually show. Let's do a brief
+> overview of this lecture. So first, we do the review of the demo from
+> the last lecture. This segment concerns the basic geometry setup for
+> the cubes, which is the pillars. And how you can use a single
+> geometric object, but you can draw it at different locations in the
+> scene with different colors. Subsequent segments will deal with basic
+> matrix stacks, and transforms, depth testing or Z-buffering, animation
+> and texture mapping. Here is the basic geometry setup. Again, I have
+> two objects, which in this case is the cube and the floor. The number
+> of buffers per objects again, I have the colors, I have the positions,
+> I have the index faces to specify the object. And now defining the
+> number of colors for the floor and so the number of buffers is the
+> product of the num per object times the number of objects, plus the
+> same colors variable because I will have four colors for the floor.
+> And number of objects again defining, and then there's this buffer
+> offset macro, I enum Vertices, Colors and Elements, which are the
+> three buffers, and I enum FLOOR and CUBE for the objects for floor and
+> the cube. Let's now talk about the cube geometry. And, I've defined
+> the width as 0.1 and the height is 0.5, and I define the cube colors,
+> so this is red, this is green, this is blue, and this is red plus
+> green which is yellow. And the cube vertices now, so the definition of
+> the cube vertices is in terms of width and height and I mean it's
+> fairly straightforward, so it's going from 0 to height and -width to
+> width. And then I define the cube indices. So what zero, one, two, and
+> three is, is the bottom face of the cube. And you can see, it's
+> -width, -width, zero, -width, +width, zero. So it's just the bottom-most plane of the cube. And the other ones are defining the
+> different other faces of the cube. So in this way I've just defined
+> arrays for the cube geometry. So here is a function that initializes
+> the object but does not include colors. So the draw geometry types of
+> functions that we saw earlier on the plane in OpenGL 1 also set the
+> colors for the object. But in this case we are going to instantiate
+> the same object in multiple locations with multiple different colors
+> and therefore we write this function to not consider colors. So offset
+> is just where in the buffer array where you want to be. You bind the
+> buffers, vertices plus offset and then you specify the vertex data.
+> You define the vertex pointer and enable the client state. And then
+> you define the elements which is your indices or faces, such as 0, 1,
+> 2 and 3 to define the bottom face. You specify the buffer data for
+> that. And you define the primitive type and the number of elements for
+> the object. So everything you did earlier for drawing vertex buffer
+> objects, except for specifying the colors. Finally we come to the
+> function to actually define the colors on the cube. And again, you
+> have this base as numobjects times numperobj, and you define the
+> colors as follows. So here you go through the number of colors and
+> what I am doing is that I am considering all of the 8 vertices on the
+> cube, in order to define the color appropriately. And k is equal to 0,
+> k is equal to 3, this is just RGB. So this is RGB, and I am just going
+> through those indices. So cube color j and k. So j is the face. So
+> this is the appropriate face on the cube. And cube color i is the
+> appropriate color. So we define the appropriate face with the correct
+> color, okay? And then for each step here, so for each of the colors,
+> notice that this whole loop is applied for each of the colors. You
+> bind the buffer which is base + i. So the first numobjects * numperobj
+> buffers are for the vertices and the face definitions. Whereas, after
+> that, you start with the buffers for the appropriate color. And for
+> each of these, you specify the appropriate color data. Then you set up
+> the color pointer, as we did earlier in draw objects. And you enable
+> the color array. Notice that this goes on for each of the 4 colors,
+> and so you have 4 different color arrays. When we eventually draw, we
+> will associate the right color array with the object, in order to draw
+> it. So in init, you init the objects without colors, and then you will
+> init the colors. So now we come to the draw function, and it's drawing
+> with colors. So again, you define the offset appropriately and then
+> the base for the colors that you're choosing. So you first bind the
+> vertices. And you enable the vertex array. Then you bind the colors.
+> And here, it's base plus color instead of offset plus vertices. So
+> earlier, it was using the offset, but now we're using the base. And
+> then again, you do the same thing for the colors. And finally, you do
+> it for the elements. So the only thing that's different from the
+> standard draw routine is that the color buffer now comes from one of
+> the fixed buffers at the end, instead of being associated with each
+> object separately.
+
+
+---
+
+
+####  Unit 2   Lecture 8: OpenGL 2   L8V2: OPENGL 2: MATRIX STACKS
+
+# L8V2: OPENGL 2: MATRIX STACKS
+
+> We're now going to discuss basic OpenGL matrix stacks and transforms.
+> So let me first summarize the OpenGL vertex transformations. Recall
+> that you start with the object in object coordinates, and here you
+> have the (x y z w) coordinates and homogeneous coordinates. Then you
+> define the ModelView matrix, which includes the object
+> transformations, to place the objects properly in the world. As well
+> as the glm::lookAt command, which you've implemented in homework 1.
+> Then you go through the projection matrix, which goes from 3D to 2D,
+> which is usually glm::perspective. So the shaded boxes are what you've
+> already implemented in homework 1, and also in homework 2. That gives
+> you the eye coordinates used for lighting, and then you go to the
+> perspective divide or dehomogenization. You have clip coordinates, and
+> you can clip to the -1 to 1 range, then you can do the perspective
+> divide or dehomogenization, you get normalized device coordinates, and
+> then you do a viewport transform so it finally appears in the window.
+> To do all of these transforms, of course, you need some kind of matrix
+> operations. In particular, you need matrix stacks. And this is very
+> important for hierarchically defined figures such as the human body.
+> You might consider the face, the torso. So you might define the torso
+> initially. You might translate and scale to place the face, the hands,
+> the legs, so forth. In old OpenGL, matrix stacks were defined for you
+> with things like glPushMatrix, glPopMatrix, glLoad, glMultMatrixf. In
+> fact, in the demo program that I have given out, which is mytest2, you
+> use the old style stack. However, things have changed in a number of
+> different ways. Nowadays in C++, the standard template library
+> includes a stack type. In fact, if you use the glm::mat4 for matrices,
+> you can just plug mat4 into a stack. And therefore, the current
+> recommendation is to just use STL stacks which are managed yourself.
+> And therefore, all of this ModelView matrix, push/pop is really
+> deprecated. In homework 2, to understand the way the stack works, you
+> should really manage it yourself. In the directions for homework 2, we
+> explain a little bit about the STL library for stacks. You can of
+> course also look this up online. It's very well documented. For
+> homeworks 1 and 2, you write your own transformation code for
+> translate, scale and rotate. Of course, in old style OpenGL, commands
+> are provided for these purposes, like glScale, glRotate and
+> glTranslate, and their equivalent glm commands, but you are supposed
+> to write it yourself in homework 1 and 2. Be careful of OpenGL
+> conventions. In the old style, you right multiply the current matrix.
+> And this leads to a difference in code where the last transformation
+> in the code is actually the first one that's applied. And glm
+> operators largely follow this convention. But this is a bit different
+> from the standard mathematical convention, and leads to column versus
+> row order. And so you have to be careful. gluLookAt, and its
+> instantiation as glm::lookAt, is just like a matrix in any other type
+> of matrix. And like any other transform, it affects the ModelView
+> matrix. Therefore you specify it after you've specified the transforms
+> to the objects, so in code it comes first, in the actual operation it
+> comes last. So why is all of this, the exact location of gluLookAt,
+> not an issue for gluPerspective? Because gluPerspective affects the
+> projection matrix stack, which usually doesn't have anything else on
+> it, while gluLookAt affects the ModelView matrix that has camera
+> positioning, but also has object motion. So let's talk about drawing
+> the pillars. This is old style OpenGL. In new OpenGL you would manage
+> the stack yourself and use STL commands to pop and push. Look at the
+> way in which this is written. This is a very powerful idiom in OpenGL.
+> We first specify the matrix mode to be the ModelView matrix. Then we
+> come to the first pillar. And notice this command between push and pop
+> matrix. That's because anything you do within these doesn't affect
+> what follows next. So, it's very common that you keep whatever is in
+> the stack at this point. Which may be gluLookAt, which may be other
+> object transformations. You push that on the stack, do your
+> translation to draw your pillar, pop out. And so, you have the
+> transforms within this push/pop block. So here, you translate to a
+> particular location on the screen. You draw this cube. And the zero
+> refers to a color. So in this case it's red. So similarly you go to
+> the next color, and you go to the next location. We can also talk
+> about the third and fourth pillars, again, different colors for the
+> cube and different locations in the scene. So we are now ready to do a
+> demo. And let me bring in my source code again. Now, let me first say
+> a little bit about this demo. So this will be demo 1, which will
+> include the white plane that we saw earlier. And will also include the
+> pillars. One question I'm going to ask you once I start the demo is,
+> does the order of drawing matter? So what happens if I move the floor
+> after the pillars in the code versus moving it before. So think about
+> that while I set up this demo. So once again, I'm showing you my
+> actual text editing environment, and my compilation environment. And
+> all I'm going to do is to change this to 1. If you look at the code,
+> it includes a number of lines, right? So I'll just show this to you.
+> So it includes lines like if DEMO is greater than or equal to 2, then
+> do so. So if DEMO is greater than 0, then I actually draw my first,
+> second, third and fourth pillars, which is just the code that I just
+> showed you on this slide. So let's try to make the program. Again the
+> makefile is fairly standard. And, now let me run this. So here I have
+> the program, you can see that I have the plane and I have the pillars.
+> And this looks really good. So here, you see that it appears in the
+> way it's supposed to appear, with the plane below and the pillars on
+> top. Let's now change the order of drawing. So let's see again what we
+> did here. We drew the object FLOOR, and then we drew the object for
+> the pillars. So one thing we can do is come down. So here is, does the
+> order of drawing matter? What happens if I draw the ground after the
+> pillars? And I'll change this to actually draw the floor here. So I
+> haven't really changed anything. I'm still drawing the pillars, I'm
+> still drawing the floor. Only thing is, I'm now drawing the floor
+> after I draw the pillars. So think about whether that should lead to
+> any change in the program. Output, and let me make the program again,
+> and let me run it. So now notice, notice what's going on. You see that
+> the floor was drawn after the pillars and therefore the pillars come
+> first and then the floor comes after them. Intuitively it make sense.
+> It's just, we're drawing objects in the order in which I specified
+> them. However, that might not be the desired behavior that you want.
+
+---
+
+
+
