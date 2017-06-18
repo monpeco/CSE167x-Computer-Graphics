@@ -1269,5 +1269,296 @@ https://youtu.be/vAn2auo1LeQ
 ---
 
 
-#### 
+#### Unit 2   Lecture 7: OpenGL Shading   L7V3: OPENGL SHADING: LIGHTING AND SHADING
 
+# L7V3: OPENGL SHADING: LIGHTING AND SHADING
+
+
+> We will now discuss the basics of lighting and shading. This is really
+> the key part of this lecture where we discussed the different shading
+> models used and we discussed different types of light sources used.
+> Putting this all together, you can understand how lighting and shading
+> works in computer graphics and in OpenGL and begin to start working on
+> homework
+> 2. The motivation for a lot of this is what happens physically in the real world, and although this lecture will discuss the concepts
+> intuitively, it is also possible to formalize them based on physical
+> arguments. In the real world, complex materials and lighting interact,
+> so the shading you get out of an object, what it looks like, depends
+> on the interaction of the illumination in the scene and the material
+> properties of which that object is made. For now, we are just going to
+> talk about some very basic approximations just like we did for Gouraud
+> and Phong shading, similarly in lighting models, to capture the key
+> effects: the overall color of an object as well as the specular
+> highlights. This lecture is largely inspired by the old OpenGL fixed
+> function pipeline, and largely reproduces the shading that would be
+> reproduced in that pipeline. Of course, that pipeline is not
+> physically based. It's a number of approximations. And of course today
+> you have the ability to write arbitrary shaders. So one of the things
+> to think about after this course is ways in which you could improve on
+> the shading model. Potentially make it nicer, make it more physically
+> based. Let's start with the types of light sources in the scene. And
+> the first light source is a very simple one, it is a point light
+> source. Of course, in the real world there is no such thing as a point
+> light source but many practical lamps can be idealized as point
+> lights. Being a point, it has a position in space and it has a
+> particular color. That's all you specify, so the position is a
+> 4-vector in homogeneous coordinates, and the color is again RGBA.
+> Point like sources come with this attenuation or quadratic model.
+> We'll describe what this is and how to set the parameters for k_c, k_l
+> and k_q. First, let's consider the case when you have a point light
+> source and it is emitting light. How much light will be received here
+> versus here? This is given by standard inverse square fall-off in
+> physics where you take this distance r and the intensity is
+> proportional to 1 over r squared. This of course holds in 3
+> dimensions; in flat-land it would be somewhat different. But, in
+> practice in our world, this is a standard law, it's true for light,
+> electromagnetic energy, it's true for gravitation. Essentially, you
+> can think about the same amount of energy being on a sphere surface of
+> radius r, the surface area goes as r squared, and so the energy
+> decreases. So this is a very standard argument where d is the distance
+> to the light source, it applies here. And it would argue that one
+> should set k_q, is equal to one. And the other components equal to
+> zero. However, let's consider some other types of light sources. So
+> let's consider a line light, or something like this, a cylinder, a
+> tube light that's emitting light. Of course, you might wonder why are
+> we considering this line light source instead of point, when we said
+> we are talking about point light sources? Why don't we have a separate
+> primitive in OpenGL that deals with line light sources? The reason for
+> that is that a point light source is easy to shape because at each
+> location on the surface you just need to look up, where the point
+> light is coming from. Whereas for a line you really have to add up or
+> do an integral over the entire line. And so it's very common in OpenGL
+> that you might draw the geometry of a tube light, but for shading
+> purposes you will concentrate it as a point source at the center.
+> However, the attenuation for a line source is different, and you can
+> go through the mathematics. You can go through the integration. And
+> essentially the intensity falls off as 1 over the radius. So if this
+> is the radius, the intensity will fall off as 1 over the radius. And
+> that's where this term k_l comes from, and so you would really want in
+> this case to have k_l equal to 1. And of course this is assuming the
+> light source itself is infinite, so the viewer is a certain distance
+> away from it, which is small compared to the light source width. Of
+> course, if you're far away from the light source width, it eventually
+> behaves like a point light source. And so, that would argue that you
+> have this linear attenuation. And in other cases such as when you have
+> a light source that's far away, or we handle that separately with the
+> directional source, but instead of a line supposing it's actually an
+> area source: something like this, and one it's close to the light
+> source. So in that case it becomes harder to compute what the
+> attenuation is and very often you may just want to keep it with the
+> constant attenuation. So an example of this is what is the
+> illumination you get from a wall? And one of the things we talk about,
+> when we talk about radiance computations is that the wall looks
+> similar from the range of different distances on it. And so in cases
+> like this, you want to keep the attenuation constant. In practice,
+> many people when they are doing computer graphics just ignore this
+> attenuation, set k_c equal to one and in fact, in our assignments
+> that's what we will be doing, right? So we will be representing the
+> attenuation often, as 1, 0 and 0, even though for a real point light
+> source you have quadratic attenuation. And so in OpenGL we are given
+> the option of using the appropriate attenuation model that is
+> appropriate to your light source. Finally, you can have a directional
+> source, and you can include that within the point source simply by
+> setting the homogeneous coordinate equal to 0. So if W is equal to 0,
+> the source is really at infinity, and that's a good model for
+> something like sun or even you have a light source which is very
+> distant relative to the scene. Of course, if the light source is a
+> directional source, the question of distance doesn't really come into
+> play, and there should be no attenuation. In fact, the k_l and k_q
+> term should be equal to 0. That's as far as the lighting is concerned;
+> the next thing we need to talk about is the material properties. That
+> is, how does a surface reflect light? For that we need to know the
+> surface normals. So, so far we've talked and we have had one brief
+> segment in transforming normals, but mostly you consider the points or
+> geometry of the surface and you are moving them around to different
+> locations. However, for lighting calculations it's absolutely critical
+> that you know the surface orientation or the surface normal, and that
+> affects the diffuse reflection, the specular reflection; it affects
+> the reflective direction of the light source, you often want to find
+> the reflective direction. The standard way of doing that is to specify
+> the normal at each vertex and then interpolate it to each fragment. In
+> some cases, for procedural models, you might have an analytic formula
+> for the normal at each point, such as on the sphere. For objects such
+> as teapots, spheres, et cetera, that you specify with GLUT, GLUT does
+> it automatically for you. And so you might wonder how the teapot in
+> all of my assignments actually has normals correctly for lighting, the
+> answer is GLUT does it for you. For parametric surfaces, you can do it
+> manually. And, in fact, there are some GLUT evaluators to do it for
+> spline curves. For more complex shapes, there's actually an
+> interesting trick in which you can average the face normals to get a
+> vertex normal. And I'll show it to you in a moment. So let's assume
+> you have a surface. Something like this. You have triangle 1. You have
+> triangle
+> 2. Now I want to get the normal at some vertex, let's say this vertex, and so I can complete that I have a few more triangles, let's say, so
+> I want the normal here. What I do is I consider the normals at these
+> locations and these are what are known as face normals. I average all
+> of them together and you can use weighted average in order to get what
+> is known as the vertex normal here. Then to get a normal in the
+> interior I interpolate the vertex normals and so that's the standard
+> technique of averaging the face normals for more complex shapes. Let's
+> talk about the different shading modes. There are 4 basic things that
+> we will consider: ambient, diffuse, specular, and emissive. Let's
+> first consider the emissive term. Emission really corresponds to
+> things like sunlight, things like light sources. And it really
+> corresponds to emission from them only when you are looking directly
+> at the light source, so not when you are looking at its reflection on
+> something else. The reason for that is, if you look directly at the
+> light source, even if there is no light from elsewhere falling on the
+> source it is going to emit light in your direction. In OpenGL, there
+> is a little bit of a gotcha that to actually see a light source it's
+> not enough to create it, you must create geometry. So only geometry is
+> what you see. Geometry is lit by light sources, but you don't see the
+> light sources, you don't see the camera. So what I will do is I will
+> create a rectangle. I mean, it's not a point because I have to see it
+> for the light source. And I will give it an emissive property, let's
+> say of white, so that it always appears white. That's a very common
+> way to set things up. This is not relevant for surfaces that are not
+> emitting light. The second thing is the ambient term, and the
+> intuition there is that even if there's no light falling directly on
+> the surface, there is light that's bouncing about in a room and gives
+> it a general diffused or ambient feeling. So if you go into a room,
+> this would be light cast typically by large light sources. Light
+> that's bouncing off the wall, and so on. It's really a hack, because
+> it is possible to simulate the exact distribution of light in a scene.
+> This is a very rich research area in computer graphics rendering known
+> as global illumination. We'll have one lecture at the end of this
+> course talking about a development there known as the rendering
+> equation. But, ambient illumination is a simple hack which says like
+> this bouncing around the scene many times. Eventually its distribution
+> is approximately uniform coming equally from all directions. So let's
+> just give the scene a global constant, and the advantage of that also
+> is that I will actually be able to see my computer graphics image. I
+> never had black pixels. And so you just give an ambient intensity to
+> the whole scene. Typically this is very low, something like 0.1 or
+> 0.2. The next aspect is the diffuse term, which corresponds to rough, matte surfaces. So something like the walls, which are rough and
+> matte. Something like the floor if it's not polished, faces are to a
+> certain extent matte of course they have much more interesting
+> reflectance properties, and this is something which technically we
+> refer to as Lambertian surfaces in computer graphics, after Lambert.
+> The idea is that light reflects equally in all directions. Of course,
+> in practice no surface will reflect light equally in all directions.
+> The closest to this is a material known as Spectralon, but even it has
+> a falloff. However, it's a good idealized model in computer graphics
+> that light hits a surface and then is equally reflected in all
+> directions, so the surface is not smooth and polished like a mirror,
+> it's a rough surface and therefore the reflection comes about in any
+> direction equally. One of the key aspects of this is the cosine
+> falloffs, so N dot L is just the cosine of this angle, so if you let
+> this be the incident angle, this is just equal to cosine of theta in
+> (theta_i). And in fact, we have to technically take a max of this and
+> 0, because you don't get light from below the surface. And this is
+> because you see that the light is coming in here, so it's really
+> incident in a plane here. Whereas the light that's flowing normal to
+> the surface is attenuated by this cosine factor. It's very important.
+> It's what gives rise to season, because the sun's light is at an
+> oblique angle in the winter; it's at a more normal angle in the
+> summer. And we can write down the formula like this, so you sum over
+> all of the light sources in the scene. You look at the intensity of
+> the light source times the diffuse component of the material, times
+> the attenuation for that light source, times the max of this cosine
+> term or L dot N and 0. That's what the diffuse, or the Lambertian term
+> is. Next, we come to specular reflections. We've already had a lot of
+> talk about the Phong illumination and shading models. The specular
+> reflections corresponds to glossy objects. We've said glossy paints,
+> white boards, things like that. And even if you look at typical
+> plastics or metals, you will have some reflection. The idea is light
+> reflects in the mirror direction, so all of you in school have studied
+> this law of light reflection, the incident and reflective directions,
+> and the normal lie in the same plane, and the angle of incidence is
+> equal to the angle of reflection. So I can write, this is the incident
+> angle. This is the reflected angle. So let's say theta incident
+> (theta_i), theta reflected (theta_r), and they have to be equal. But
+> the eye is not actually the reflected direction. So it's really the
+> rough reflection. If it were a smooth mirror you would get intensity
+> only here and no intensity here. And so you can see that how far off
+> angle the eye is will actually affect the amount of light that's
+> reflected. So here is the reflection lobe. You can see that light is
+> reflected mainly in the mirror direction, but there is some intensity
+> that goes towards the eye. Let me repeat my slide about the Phong
+> Illumination Model which covers specular or glossy materials. And
+> really you can be considered to be blurred reflections of the light
+> source, if you increased the roughness, you get a greater blur in
+> terms of the reflection of light source. So let's go back and talk
+> about Phong Illumination. Despite its long history, this was first
+> proposed in the mid-1970s, and even though we now know that there are
+> more accurate, physically based ways of doing reflection, it's still a
+> very commonly used model. And Phong's idea was generally that he
+> wanted a simple way to handle view-dependent highlights, not
+> necessarily physically based. And so he said, where taking the dot
+> product for diffused surfaces, why don't we take a dot product for
+> specular surfaces. But instead of taking the normal in the lighting
+> direction, we'll take the eye and the reflection of the lighting
+> direction about the normal. And furthermore, we'll raise the cosine to
+> some power, so you can control how shiny the surface is, how white the
+> highlight is. There is an alternative form which just says, takes the
+> half angle between the light source and the viewer, and take the dot
+> product of that with the normal. So, then it's much closer to standard
+> diffuse illumination, which is the dot product of light and normal,
+> this is dot product of the half angle and normal, and again you can
+> raise it to some power. That's something which is known as the
+> Blinn-Phong model and actually for physical surfaces, the half-angle
+> form is more accurate. It's the form in standard OpenGL and largely,
+> what I ask you to implement. Let first consider the standard Phong
+> formula, not the Blinn-Phong form, where you're considering the
+> reflection of the light direction about the normal, that is the angles
+> are the same and it's in a plane. That's why I can draw this diagram
+> on a plane. And now I am looking at really, the angle between the
+> reflected direction and the eye. This is between the reflected
+> direction and the eye. And that angle, that cosine I am going to now
+> raise to some power. Okay. So the question is, I just need to find the
+> mathematical formula for the reflected direction. And it's relatively
+> easy to do it, although the formula is somewhat complex. So we first
+> look at the lighting direction. And I'm going to break this into the
+> horizontal and the vertical components, so the vertical component is
+> along the direction of the normal, the horizontal component is going
+> along the surface. Now the horizontal component doesn't actually
+> change for the reflection, but the vertical component, the direction,
+> is changed and that's essentially what a reflection is. So you can
+> take the original lighting which includes the parallel and the
+> perpendicular component and what we want to do is flip this component
+> along the normal. So you consider the component along the normal and
+> you take twice that in order to flip it and you subtract. So
+> essentially what we have is we have the lighting, then what you want
+> to do is subtract out this component, so that will be the dot product
+> of the lighting and the normal along the direction of the normal
+> assuming all of these things are unit vectors. And you want to have a
+> factor of 2 in there. So, I've just inverted the signs in order to
+> make this work out and get the correct sign. But essentially that's
+> what you have. You have 2 of L dot N times N, because that corresponds
+> to the reflection, and then you subtract out the lighting. An
+> alternative form is the half-angle form, which is the Blinn-Phong
+> formula. And that's after Jim Blinn, who was one of the pioneers in
+> computer graphics. Just tweak this formula a little bit, and there you
+> just take the lighting and the reflected direction. You take
+> half-angle between them, so you can look at H. If these were scalars
+> would just be L plus R divided by 2. In our case, we can write it as L
+> plus R, and you can normalize by the norm of L plus R. So what is the
+> final specular reflection formula? You have some intensity for the
+> light i, times the specular coefficient of the material, times the
+> attenuation, times again max of N dot H, 0. Just as you had max of N
+> dot L, 0, but there is this additional shininess term which controls
+> how sharp the lobe is. So if shininess is very large, it's
+> concentrated about the half angle direction and the mirror direction.
+> If shininess is 0, then it essentially is very similar to the
+> Lambertian case, except using the half angle instead of the lighting
+> direction for the cosine. Okay. So let's do one example of this. Let's
+> go through the mytest3 example. And here is my program. Okay. Now,
+> what I want to do is change the intensity. So, let's look at this, and
+> let me bring in my, editor. So, first of all I am going to make the
+> teapot move a little bit faster, so I'll change this to .005. And then
+> I want to change the intensity in the highlight, so right now the
+> exponent is 100. Let's make the exponent equal to 10. Okay? So
+> remember how the highlight looked like earlier. I'm going to show you
+> writing actual code. So I come here and I say make mytest3. And it
+> goes through the compilation and eventually it will make the program.
+> So now all I need to do is run it. And you notice that the highlights
+> are much larger. So let me make it the same size as the earlier, this
+> one. And you notice that if you compare the highlights on this teapot
+> here, which was my original program, to the highlights here, you'll
+> see that the highlights have now become much larger. And of course, my
+> teapot is moving somewhat more quickly because I made it move. I
+> changed the increment. And so if I made the highlight back to 100 then
+> I would get this. So this is with 10, this is with 100. And in this
+> way you can shape the way in which the highlights look. In the next
+> segment, we'll be talking about the fragment shaders, and ways in
+> which you will actually implement this in OpenGL.
